@@ -29,9 +29,6 @@ export async function createUser(
   );
   return result.insertId;
 }
-const user = await getUser("thaparohan2019@gmail.com");
-const allUsers = await getUsers();
-console.log(allUsers);
 
 // await createUser(
 //   "nidhi",
