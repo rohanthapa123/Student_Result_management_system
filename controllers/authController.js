@@ -3,6 +3,17 @@ const { pool } = require("../config/database");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+const generatePassword = () =>{
+    let length = 8;
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+'
+    let password = '';
+    for(let i = 0; i< length;i++){
+        let random = Math.floor(Math.random()*characters.length);
+        password += characters.charAt(random);
+    }
+    return password;
+}
+
 exports.login = async (req, res) => {
   console.log(req.body);
   const { email, password } = req.body;
@@ -42,7 +53,7 @@ exports.login = async (req, res) => {
 
 exports.register = async (req, res) => {
   console.log(req.body);
-  const { email, fname, mname, lname, dob, role, password, cpassword, contacts,temp_address, perm_address } =
+  const { email, fname, mname, lname, dob, role,  contacts,temp_address, perm_address } =
     req.body;
 
   try {
@@ -53,9 +64,7 @@ exports.register = async (req, res) => {
     if (results.length > 0) {
       return res.status(400).json({ error: "Email already used" });
     }
-    if (password !== cpassword) {
-      return res.status(400).json({ error: "Password Doesn't Match" });
-    }
+    const password = generatePassword()
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);
 
@@ -69,6 +78,7 @@ exports.register = async (req, res) => {
     }
     await pool.query('INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)',[user_id,temp_address,'temporary']);
     await pool.query('INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)',[user_id,perm_address,'permanent']);
+    console.log(password);
     return res.json({ message: "Done", insertId: result.insertId });
   } catch (error) {
     console.log(error);
