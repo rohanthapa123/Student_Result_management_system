@@ -1,6 +1,12 @@
-import { getUsers } from "../models/userModel.js";
+const { pool } = require("../config/database");
 
-export const getAllUser = async (req, res) => {
-  const users = await getUsers();
-  res.send(users);
+const getAllUser = async (req, res,next) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM user");
+    res.status(200).json({data: rows})
+  } catch (error) {
+    console.log(error);
+  }
 };
+
+module.exports = getAllUser;

@@ -1,5 +1,5 @@
-import { pool } from "../config/database.js";
-export async function getUsers() {
+const pool = require("../config/database.js");
+async function getUsers() {
   try {
     const [rows] = await pool.query("SELECT * FROM user");
     return rows;
@@ -7,3 +7,4 @@ export async function getUsers() {
     console.log(error);
   }
 }
+module.exports = getUsers;

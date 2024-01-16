@@ -1,4 +1,4 @@
-import { pool } from "./config/database.js";
+const pool = require("./config/database.js");
 
 export async function getUsers() {
   const [rows] = await pool.query("SELECT * FROM user");
@@ -14,6 +14,7 @@ export async function getUser(email) {
   );
   return rows;
 }
+
 export async function createUser(
   fname,
   mname,

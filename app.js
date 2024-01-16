@@ -1,6 +1,7 @@
-import express from "express";
-
+const express = require("express");
+const path = require("path");
 const app = express();
+const cookieParser = require("cookie-parser");
 // import { getUser, getUsers, createUser } from "./database.js";
 
 // app.get("/api/users", async (req, res) => {
@@ -29,13 +30,32 @@ const app = express();
 //   );
 //   res.send(user);
 // });
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(cookieParser());
+app.use(express.json());
 
-import userRouter from "./routes/userRoute.js";
+const publicDirectory = path.join(__dirname, "./public");
+app.use(express.static(publicDirectory));
+
+app.set("view engine", "hbs");
+
+app.get("/", (req, res) => {
+  res.render("index");
+});
+
+const userRouter = require("./routes/userRoute.js");
 app.use(userRouter);
+
+const auth = require("./routes/auth.js");
+app.use(auth);
 
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(500).send("Something broke!");
+  res.status(500).send("<h1>Something broke!</h1>");
 });
 
 app.listen(8080, () => {
