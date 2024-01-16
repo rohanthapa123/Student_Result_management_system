@@ -106,6 +106,22 @@ exports.isAdmin = (req, res, next) => {
     return res.status(403).json({ message: "Permission denied" });
   }
 };
+exports.isTeacher = (req, res, next) => {
+    console.log(req.user)
+  if (req.user && req.user.role == 'teacher') {
+    next();
+  } else {
+    return res.status(403).json({ message: "Permission denied" });
+  }
+};
+exports.isStudent = (req, res, next) => {
+    console.log(req.user)
+  if (req.user && req.user.role == 'student') {
+    next();
+  } else {
+    return res.status(403).json({ message: "Permission denied" });
+  }
+};
 
 exports.logout = (req, res, next) => {
     res.clearCookie('userRegistered');

@@ -1,12 +1,80 @@
 const { pool } = require("../config/database");
 
-const getAllUser = async (req, res,next) => {
+exports.getAllUser = async (req, res, next) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM user");
-    res.status(200).json({data: rows})
+    const [rows] = await pool.query(
+      "SELECT user_id, fname, mname, lname, role,dob, email  FROM user"
+    );
+    res.status(200).json({ data: rows });
   } catch (error) {
     console.log(error);
   }
 };
 
-module.exports = getAllUser;
+exports.updateUser = async (req, res, next) => {
+  console.log(req.body);
+  const {
+    email,
+    fname,
+    mname,
+    lname,
+    dob,
+    role,
+    password,
+    cpassword,
+    contacts,
+    temp_address,
+    perm_address,
+  } = req.body;
+
+  try {
+    const [results] = await pool.query("SELECT * FROM user WHERE email = ?", [
+      email,
+    ]);
+    console.log(results);
+    if (results.length > 0) {
+      return res.status(400).json({ error: "Email already used" });
+    }
+    if (password !== cpassword) {
+      return res.status(400).json({ error: "Password Doesn't Match" });
+    }
+    let hashedPassword = await bcrypt.hash(password, 8);
+    // console.log(hashedPassword);
+
+    const [result] = await pool.query(
+      `INSERT INTO user ( fname, mname, lname, dob, email, password, role) Values (?,?, ?, ?, ?,?,?)`,
+      [fname, mname, lname, dob, email, hashedPassword, role]
+    );
+    const user_id = result.insertId;
+    for (const contact of contacts) {
+      await pool.query(
+        "INSERT INTO user_contact (user_id, contact) VALUES (?,?)",
+        [user_id, contact]
+      );
+    }
+    await pool.query(
+      "INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)",
+      [user_id, temp_address, "temporary"]
+    );
+    await pool.query(
+      "INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)",
+      [user_id, perm_address, "permanent"]
+    );
+    return res.json({ message: "Done", insertId: result.insertId });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+exports.deleteUserById = async (req, res, next) => {
+  try {
+    console.log(req.params.id);
+    const user_id = req.params.id;
+    await pool.query("DELETE FROM user_address WHERE user_id = ?", [user_id]);
+    await pool.query("DELETE FROM user_contact WHERE user_id = ?", [user_id]);
+    await pool.query("DELETE FROM user WHERE user_id = ?", [user_id]);
+    res.status(200).json({ message: "Delete Success" });
+  } catch (error) {
+    console.log(error);
+  }
+};
