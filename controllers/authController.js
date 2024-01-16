@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
 
 exports.register = async (req, res) => {
   console.log(req.body);
-  const { email, fname, mname, lname, dob, role, password, cpassword } =
+  const { email, fname, mname, lname, dob, role, password, cpassword, contacts,temp_address, perm_address } =
     req.body;
 
   try {
@@ -63,7 +63,12 @@ exports.register = async (req, res) => {
       `INSERT INTO user ( fname, mname, lname, dob, email, password, role) Values (?,?, ?, ?, ?,?,?)`,
       [fname, mname, lname, dob, email, hashedPassword, role]
     );
-
+    const user_id = result.insertId;
+    for(const contact of contacts){
+        await pool.query('INSERT INTO user_contact (user_id, contact) VALUES (?,?)',[user_id,contact])
+    }
+    await pool.query('INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)',[user_id,temp_address,'temporary']);
+    await pool.query('INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)',[user_id,perm_address,'permanent']);
     return res.json({ message: "Done", insertId: result.insertId });
   } catch (error) {
     console.log(error);
