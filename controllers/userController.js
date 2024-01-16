@@ -1,4 +1,21 @@
 const { pool } = require("../config/database");
+const userService = require("../services/userService");
+exports.register = async (req, res) => {
+  // console.log(req.body);
+
+  try {
+    const userData = req.body;
+    // console.log("userData",userData)
+    const result = await userService.registerUser(userData);
+    return res.json({ message: "Done", insertId: result.insertId });
+  } catch (error) {
+    if (error.status && error.message) {
+      res.status(error.status).json({ error: error.message });
+    }
+    console.log("error at userController", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 exports.getAllUser = async (req, res, next) => {
   try {
@@ -66,6 +83,7 @@ exports.updateUser = async (req, res, next) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 exports.deleteUserById = async (req, res, next) => {
   try {
     console.log(req.params.id);

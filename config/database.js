@@ -10,4 +10,3 @@ exports.pool = mysql
     database: process.env.MYSQL_DATABASE,
   })
   .promise();
-

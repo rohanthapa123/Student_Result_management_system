@@ -3,17 +3,6 @@ const { pool } = require("../config/database");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const generatePassword = () =>{
-    let length = 8;
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~!@#$%^&*()_+'
-    let password = '';
-    for(let i = 0; i< length;i++){
-        let random = Math.floor(Math.random()*characters.length);
-        password += characters.charAt(random);
-    }
-    return password;
-}
-
 exports.login = async (req, res) => {
   console.log(req.body);
   const { email, password } = req.body;
@@ -51,43 +40,8 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.register = async (req, res) => {
-  console.log(req.body);
-  const { email, fname, mname, lname, dob, role,  contacts,temp_address, perm_address } =
-    req.body;
-
-  try {
-    const [results] = await pool.query("SELECT * FROM user WHERE email = ?", [
-      email,
-    ]);
-    console.log(results);
-    if (results.length > 0) {
-      return res.status(400).json({ error: "Email already used" });
-    }
-    const password = generatePassword()
-    let hashedPassword = await bcrypt.hash(password, 8);
-    // console.log(hashedPassword);
-
-    const [result] = await pool.query(
-      `INSERT INTO user ( fname, mname, lname, dob, email, password, role) Values (?,?, ?, ?, ?,?,?)`,
-      [fname, mname, lname, dob, email, hashedPassword, role]
-    );
-    const user_id = result.insertId;
-    for(const contact of contacts){
-        await pool.query('INSERT INTO user_contact (user_id, contact) VALUES (?,?)',[user_id,contact])
-    }
-    await pool.query('INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)',[user_id,temp_address,'temporary']);
-    await pool.query('INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)',[user_id,perm_address,'permanent']);
-    console.log(password);
-    return res.json({ message: "Done", insertId: result.insertId });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
 exports.loggedIn = async (req, res, next) => {
-//   console.log(req.cookies);
+  //   console.log(req.cookies);
   if (!req.cookies || !req.cookies.userRegistered)
     return res.status(401).json({ message: "Unauthorized:Not Logged IN" });
   try {
@@ -95,38 +49,40 @@ exports.loggedIn = async (req, res, next) => {
       req.cookies.userRegistered,
       process.env.JWT_SECRET
     );
-    console.log(decoded)
+    // console.log(decoded)
     const [user] = await pool.query("SELECT * FROM user WHERE user_id = ?", [
       decoded.user_id,
     ]);
-    console.log(user[0])
+    // console.log(user[0])
     req.user = user[0];
     next();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error) return next();
   }
 };
 
 exports.isAdmin = (req, res, next) => {
-    console.log(req.user)
-  if (req.user && req.user.role == 'admin') {
+  // console.log(req.user)
+  if (req.user && req.user.role == "admin") {
     next();
   } else {
     return res.status(403).json({ message: "Permission denied" });
   }
 };
+
 exports.isTeacher = (req, res, next) => {
-    console.log(req.user)
-  if (req.user && req.user.role == 'teacher') {
+  console.log(req.user);
+  if (req.user && req.user.role == "teacher") {
     next();
   } else {
     return res.status(403).json({ message: "Permission denied" });
   }
 };
+
 exports.isStudent = (req, res, next) => {
-    console.log(req.user)
-  if (req.user && req.user.role == 'student') {
+  console.log(req.user);
+  if (req.user && req.user.role == "student") {
     next();
   } else {
     return res.status(403).json({ message: "Permission denied" });
@@ -134,6 +90,6 @@ exports.isStudent = (req, res, next) => {
 };
 
 exports.logout = (req, res, next) => {
-    res.clearCookie('userRegistered');
-    res.status(200).json({message: 'Logout Successful'})
-}
+  res.clearCookie("userRegistered");
+  res.status(200).json({ message: "Logout Successful" });
+};
