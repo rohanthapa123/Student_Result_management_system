@@ -4,19 +4,19 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 exports.login = async (req, res) => {
-  console.log(req.body);
+  //   console.log(req.body);
   const { email, password } = req.body;
 
   try {
     const [result] = await pool.query("SELECT * FROM user WHERE email = ?", [
       email,
     ]);
-    console.log(result);
+    // console.log(result);
     if (result.length === 0) {
       return res.status(402).json({ message: "Wrong Credentials" });
     }
     const passwordMatch = await bcrypt.compare(password, result[0].password);
-    console.log(passwordMatch);
+    // console.log(passwordMatch);
     if (passwordMatch === false) {
       return res.status(402).json({ message: "Wrong Password" });
     }
@@ -58,7 +58,15 @@ exports.loggedIn = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    if (error) return next();
+    if (error instanceof jwt.JsonWebTokenError) {
+      console.error("Invalid token");
+      res.status(400).json({ message: "Invalid Token" });
+    } else if (error instanceof jwt.TokenExpiredError) {
+      console.error("Token has expired");
+    } else {
+      console.error("Error verifying token:", error.message);
+      res.status(400).json({ message: "Error verifying token" });
+    }
   }
 };
 
@@ -72,7 +80,7 @@ exports.isAdmin = (req, res, next) => {
 };
 
 exports.isTeacher = (req, res, next) => {
-  console.log(req.user);
+  //   console.log(req.user);
   if (req.user && req.user.role == "teacher") {
     next();
   } else {
@@ -81,7 +89,7 @@ exports.isTeacher = (req, res, next) => {
 };
 
 exports.isStudent = (req, res, next) => {
-  console.log(req.user);
+  //   console.log(req.user);
   if (req.user && req.user.role == "student") {
     next();
   } else {

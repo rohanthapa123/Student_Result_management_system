@@ -1,5 +1,7 @@
 const { pool } = require("../config/database");
 const userService = require("../services/userService");
+
+
 exports.register = async (req, res) => {
   // console.log(req.body);
 
@@ -19,9 +21,8 @@ exports.register = async (req, res) => {
 
 exports.getAllUser = async (req, res, next) => {
   try {
-    const [rows] = await pool.query(
-      "SELECT user_id, fname, mname, lname, role,dob, email  FROM user"
-    );
+
+    const [rows] = await userService.getAllUser();
     res.status(200).json({ data: rows });
   } catch (error) {
     console.log(error);
@@ -86,13 +87,14 @@ exports.updateUser = async (req, res, next) => {
 
 exports.deleteUserById = async (req, res, next) => {
   try {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     const user_id = req.params.id;
-    await pool.query("DELETE FROM user_address WHERE user_id = ?", [user_id]);
-    await pool.query("DELETE FROM user_contact WHERE user_id = ?", [user_id]);
-    await pool.query("DELETE FROM user WHERE user_id = ?", [user_id]);
+    await userService.deleteById(user_id);
     res.status(200).json({ message: "Delete Success" });
   } catch (error) {
+    if (error.status && error.message) {
+      res.status(error.status).json({ error: error.message });
+    }
     console.log(error);
   }
 };
