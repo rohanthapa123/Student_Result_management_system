@@ -100,11 +100,40 @@ class UserModel {
     try {
       connection = await pool.getConnection();
       await connection.beginTransaction();
-      await pool.query("DELETE FROM user_address WHERE user_id = ?", [user_id]);
-      await pool.query("DELETE FROM user_contact WHERE user_id = ?", [user_id]);
-      await pool.query("DELETE FROM user WHERE user_id = ?", [user_id]);
+      await connection.query("DELETE FROM user_address WHERE user_id = ?", [
+        user_id,
+      ]);
+      await connection.query("DELETE FROM user_contact WHERE user_id = ?", [
+        user_id,
+      ]);
+      const [userRole] = await connection.query(
+        "SELECT role FROM user WHERE user_id = ?",
+        [user_id]
+      );
+      // console.log(userRole)
+      // console.log(userRole[0].role);
+      const role = userRole[0].role;
+      if(role === 'teacher'){
+        await connection.query('DELETE FROM teacher WHERE user_id = ?',[user_id])
+      } else if(role === 'student'){
+        await connection.query('DELETE FROM student WHERE user_id = ?',[user_id])
+      }else if(role === 'admin'){
+        await connection.query('DELETE FROM admin WHERE user_id = ?',[user_id])
+      }
+
+      await connection.query("DELETE FROM user WHERE user_id = ?", [user_id]);
       await connection.commit();
     } catch (error) {
+      throw error;
+    }
+  }
+
+  async updatePassword(password, user_id){
+    try {
+      const [result] =await pool.query('UPDATE user SET password = ? WHERE user_id = ?',[password, user_id]);
+      return result;
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }

@@ -49,3 +49,31 @@ exports.getAllUser = async () => {
     throw error;
   }
 };
+exports.getUserById = async (id) => {
+  try {
+    const [results] = await userModel.getUserById(id);
+    return [results];
+  } catch (error) {
+    console.log("error at user service", error);
+    throw error;
+  }
+};
+exports.getUserByEmail = async (email) => {
+  try {
+    const [results] = await userModel.getUserByEmail(email);
+    return [results];
+  } catch (error) {
+    console.log("error at user service", error);
+    throw error;
+  }
+};
+
+exports.changePassword = async (password, user_id) =>{
+  try {
+    const result = await userModel.updatePassword(password, user_id);
+    return result;
+  } catch (error) {
+    console.log(error)
+    throw error;
+  }
+}

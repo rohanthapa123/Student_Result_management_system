@@ -50,6 +50,9 @@ app.get("/", (req, res) => {
 const userRouter = require("./routes/userRoute.js");
 app.use(userRouter);
 
+const classRouter = require("./routes/classRoute.js");
+app.use(classRouter);
+
 const auth = require("./routes/auth.js");
 app.use(auth);
 

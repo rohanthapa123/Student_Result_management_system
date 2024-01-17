@@ -1,14 +1,33 @@
 const { pool } = require("../config/database");
 const userService = require("../services/userService");
-
+const adminService = require("../services/adminService")
+const teacherService = require("../services/teacherService")
+const studentService = require("../services/studentService")
 
 exports.register = async (req, res) => {
   // console.log(req.body);
 
   try {
     const userData = req.body;
+    const {subject} = req.body
+    const {user_id,current_class,section_id, blood_group, nationality} = req.body;
     // console.log("userData",userData)
     const result = await userService.registerUser(userData);
+    switch (userData.role) {
+      case "admin":
+        await adminService.insertAdminData(result.insertId);
+        break;
+      case "student":
+        await studentService.insertStudentData()
+        break;
+      case "teacher":
+        await teacherService.insertTeacherData(result.insertId, subject);
+        break;
+      default:
+        const error = new Error("Role undefined");
+        error.status(402);
+        throw error;
+    }
     return res.json({ message: "Done", insertId: result.insertId });
   } catch (error) {
     if (error.status && error.message) {
@@ -21,7 +40,6 @@ exports.register = async (req, res) => {
 
 exports.getAllUser = async (req, res, next) => {
   try {
-
     const [rows] = await userService.getAllUser();
     res.status(200).json({ data: rows });
   } catch (error) {

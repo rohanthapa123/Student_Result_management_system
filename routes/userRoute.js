@@ -1,6 +1,6 @@
 const express = require("express");
 const { getAllUser, deleteUserById, register } = require("../controllers/userController");
-const { loggedIn, isAdmin } = require("../controllers/authController");
+const { loggedIn, isAdmin } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 router.post(
