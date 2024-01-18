@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const userService = require("../services/userService");
+const blacklistToken = require("../utils/tokenBlacklist");
 
 exports.login = async (req, res) => {
   //   console.log(req.body);
@@ -18,7 +19,7 @@ exports.login = async (req, res) => {
       return res.status(402).json({ message: "Wrong Password" });
     }
     const token = jwt.sign(
-      { user_id: result[0].user_id },
+      { user_id: result[0].user_id, role: result[0].role  },
       process.env.JWT_SECRET,
       {
         expiresIn: process.env.JWT_EXPIRES,
@@ -29,7 +30,11 @@ exports.login = async (req, res) => {
         Date.now() + process.env.COOKIE_EXPIRES * 24 * 60 * 60 * 1000
       ),
       httpOnly: true,
+      secure: true,
+      // signed: true,
+      sameSite : true,
     };
+    req.session.isAuth = true;
     res.cookie("userRegistered", token, cookieOptions);
     return res.status(200).json({ message: "Login Success" });
   } catch (error) {
@@ -57,11 +62,15 @@ exports.changePassword = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(newPassword, 8);
     const result = await userService.changePassword(hashedPassword, user_id);
-    res
-      .status(200)
-      .json({
-        message: "password changed successfully",
-        insertId: result.insertId,
-      });
-  } catch (error) {}
+    const existingToken = req.cookies.jwt;
+    blacklistToken(existingToken);
+    res.clearCookie("userRegistered");
+    res.status(200).json({
+      message: "password changed successfully",
+      insertId: result.insertId,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };

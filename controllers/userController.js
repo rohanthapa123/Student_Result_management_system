@@ -1,16 +1,17 @@
 const { pool } = require("../config/database");
 const userService = require("../services/userService");
-const adminService = require("../services/adminService")
-const teacherService = require("../services/teacherService")
-const studentService = require("../services/studentService")
+const adminService = require("../services/adminService");
+const teacherService = require("../services/teacherService");
+const studentService = require("../services/studentService");
 
 exports.register = async (req, res) => {
   // console.log(req.body);
 
   try {
     const userData = req.body;
-    const {subject} = req.body
-    const {user_id,current_class,section_id, blood_group, nationality} = req.body;
+    const { subject } = req.body;
+    const { user_id, current_class, section_id, blood_group, nationality } =
+      req.body;
     // console.log("userData",userData)
     const result = await userService.registerUser(userData);
     switch (userData.role) {
@@ -18,7 +19,7 @@ exports.register = async (req, res) => {
         await adminService.insertAdminData(result.insertId);
         break;
       case "student":
-        await studentService.insertStudentData()
+        await studentService.insertStudentData();
         break;
       case "teacher":
         await teacherService.insertTeacherData(result.insertId, subject);
@@ -39,6 +40,7 @@ exports.register = async (req, res) => {
 };
 
 exports.getAllUser = async (req, res, next) => {
+  console.log(req.session);
   try {
     const [rows] = await userService.getAllUser();
     res.status(200).json({ data: rows });

@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const cookieParser = require("cookie-parser");
+const session = require("express-session")
 // import { getUser, getUsers, createUser } from "./database.js";
 
 // app.get("/api/users", async (req, res) => {
@@ -36,6 +37,14 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(session({
+  secret: 'helloeveryone',
+  resave: false,
+  saveUninitialized: false
+}))
+  
+
+
 app.use(express.json());
 
 const publicDirectory = path.join(__dirname, "./public");

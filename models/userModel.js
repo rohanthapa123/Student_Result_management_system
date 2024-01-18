@@ -57,16 +57,23 @@ class UserModel {
   async getUsers() {
     try {
       const [rows] = await pool.query(`
-            SELECT
-                user.*,
-                GROUP_CONCAT(DISTINCT user_address.address ORDER BY user_address.address_id) as addresses,
-                GROUP_CONCAT(DISTINCT user_contact.contact ORDER BY user_contact.user_id) as contacts
-            FROM 
-                user 
-                INNER JOIN user_address ON user.user_id = user_address.user_id 
-                INNER JOIN user_contact ON user.user_id = user_contact.user_id
-            GROUP BY 
-                user.user_id
+      SELECT
+      user.user_id,
+                  user.fname,
+                  user.mname,
+                  user.lname,
+                  user.role,
+                  user.email,
+                  user.dob,
+      GROUP_CONCAT(DISTINCT user_contact.contact ORDER BY user_contact.user_id) as contacts,
+      MAX(CASE WHEN user_address.address_type = 'temporary' THEN user_address.address END) as temp_address,
+      MAX(CASE WHEN user_address.address_type = 'permanent' THEN user_address.address END) as permanent_address
+  FROM 
+      user 
+      LEFT JOIN user_address ON user.user_id = user_address.user_id 
+      LEFT JOIN user_contact ON user.user_id = user_contact.user_id
+  GROUP BY 
+      user.user_id;
         `);
 
       return [rows];
@@ -113,12 +120,18 @@ class UserModel {
       // console.log(userRole)
       // console.log(userRole[0].role);
       const role = userRole[0].role;
-      if(role === 'teacher'){
-        await connection.query('DELETE FROM teacher WHERE user_id = ?',[user_id])
-      } else if(role === 'student'){
-        await connection.query('DELETE FROM student WHERE user_id = ?',[user_id])
-      }else if(role === 'admin'){
-        await connection.query('DELETE FROM admin WHERE user_id = ?',[user_id])
+      if (role === "teacher") {
+        await connection.query("DELETE FROM teacher WHERE user_id = ?", [
+          user_id,
+        ]);
+      } else if (role === "student") {
+        await connection.query("DELETE FROM student WHERE user_id = ?", [
+          user_id,
+        ]);
+      } else if (role === "admin") {
+        await connection.query("DELETE FROM admin WHERE user_id = ?", [
+          user_id,
+        ]);
       }
 
       await connection.query("DELETE FROM user WHERE user_id = ?", [user_id]);
@@ -128,9 +141,12 @@ class UserModel {
     }
   }
 
-  async updatePassword(password, user_id){
+  async updatePassword(password, user_id) {
     try {
-      const [result] =await pool.query('UPDATE user SET password = ? WHERE user_id = ?',[password, user_id]);
+      const [result] = await pool.query(
+        "UPDATE user SET password = ? WHERE user_id = ?",
+        [password, user_id]
+      );
       return result;
     } catch (error) {
       console.log(error);
