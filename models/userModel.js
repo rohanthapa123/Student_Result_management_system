@@ -10,7 +10,7 @@ const { pool } = require("../config/database");
 // module.exports = getUsers;
 
 class UserModel {
-  async createUser(userData) {
+  async createUser(userData, imageBuffer) {
     // console.log(userData);
     let connection;
     const {
@@ -29,8 +29,8 @@ class UserModel {
       connection = await pool.getConnection();
       await connection.beginTransaction();
       const [result] = await connection.query(
-        `INSERT INTO user ( fname, mname, lname, dob, email, password, role) Values (?,?, ?, ?, ?,?,?)`,
-        [fname, mname, lname, dob, email, password, role]
+        `INSERT INTO user ( fname, mname, lname, dob, email, password, role, profile) Values (?,?, ?, ?, ?,?,?,?)`,
+        [fname, mname, lname, dob, email, password, role,imageBuffer]
       );
       const user_id = result.insertId;
       for (const contact of contacts) {

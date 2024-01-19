@@ -2,36 +2,8 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
 const sessionMiddleware = require("./config/session.js")
-// import { getUser, getUsers, createUser } from "./database.js";
 
-// app.get("/api/users", async (req, res) => {
-//   const users = await getUsers();
-//   res.send(users);
-// });
-
-// app.post("/api/users/:email", async (req, res) => {
-//   const user = await getUser(req.params.email);
-//   res.send({
-//     success: 1,
-//     res: user,
-//   });
-// });
-
-// app.post("/api/user", async (req, res) => {
-//   const { fname, mname, lname, role, email, dob, password } = req.body;
-//   const user = await createUser(
-//     fname,
-//     mname,
-//     lname,
-//     role,
-//     email,
-//     dob,
-//     password
-//   );
-//   res.send(user);
-// });
 app.use(
   express.urlencoded({
     extended: true,
@@ -52,11 +24,16 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+
+
 const userRouter = require("./routes/userRoute.js");
 app.use(userRouter);
 
 const classRouter = require("./routes/classRoute.js");
 app.use(classRouter);
+
+const sectionRouter = require("./routes/sectionRoute.js");
+app.use(sectionRouter);
 
 const auth = require("./routes/auth.js");
 app.use(auth);

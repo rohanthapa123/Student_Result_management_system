@@ -3,21 +3,22 @@ const generatePassword = require("../utils/passwordUtil");
 const bcrypt = require("bcryptjs");
 const sendCredential = require("../utils/sendCredentials");
 
-exports.registerUser = async (userData) => {
+exports.registerUser = async (userData,imageBuffer) => {
   try {
     // console.log(userData.email);
     const [results] = await userModel.getUserByEmail(userData.email);
     // console.log(results);
     if (results.length > 0) {
-        const error = new Error("Email already used");
-        error.status = 400;
-        throw error;
+      const error = new Error("Email already used");
+      error.status = 400;
+      // error.message = "Email already used";
+      throw error;
     }
     const password = generatePassword();
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);
     const user = { ...userData, password: hashedPassword };
-    const newUser = await userModel.createUser(user);
+    const newUser = await userModel.createUser(user,imageBuffer);
     console.log(password);
     sendCredential(userData.email, password);
     return newUser;
@@ -68,12 +69,12 @@ exports.getUserByEmail = async (email) => {
   }
 };
 
-exports.changePassword = async (password, user_id) =>{
+exports.changePassword = async (password, user_id) => {
   try {
     const result = await userModel.updatePassword(password, user_id);
     return result;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw error;
   }
-}
+};

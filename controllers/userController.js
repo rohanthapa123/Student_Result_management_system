@@ -10,10 +10,12 @@ exports.register = async (req, res) => {
   try {
     const userData = req.body;
     const { subject } = req.body;
+    const imageBuffer = req.file.buffer;
+    console.log(imageBuffer);
     const { user_id, current_class, section_id, blood_group, nationality } =
       req.body;
     // console.log("userData",userData)
-    const result = await userService.registerUser(userData);
+    const result = await userService.registerUser(userData,imageBuffer);
     switch (userData.role) {
       case "admin":
         await adminService.insertAdminData(result.insertId);
@@ -33,9 +35,10 @@ exports.register = async (req, res) => {
   } catch (error) {
     if (error.status && error.message) {
       res.status(error.status).json({ error: error.message });
+    } else {
+      console.log("error at userController", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-    console.log("error at userController", error);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
