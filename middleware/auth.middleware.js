@@ -1,13 +1,11 @@
-const { pool } = require("../config/database");
+const { getUserById } = require("../models/userModel");
 
 exports.loggedIn = async (req, res, next) => {
   console.log("session",req.session);
   try {
     if (req.session && req.session.user_id) {
       const user_id = req.session.user_id;
-      const [user] = await pool.query("SELECT * FROM user WHERE user_id = ?", [
-        user_id,
-      ]);
+      const [user] = await getUserById(user_id);
       req.user = user[0];
       next();
     } else {

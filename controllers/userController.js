@@ -10,7 +10,7 @@ exports.register = async (req, res) => {
   try {
     const userData = req.body;
     const { subject } = req.body;
-    const imageBuffer = req.file.buffer;
+    const imageBuffer = req.file;
     console.log(imageBuffer);
     const { user_id, current_class, section_id, blood_group, nationality } =
       req.body;
@@ -114,6 +114,20 @@ exports.deleteUserById = async (req, res, next) => {
     const user_id = req.params.id;
     await userService.deleteById(user_id);
     res.status(200).json({ message: "Delete Success" });
+  } catch (error) {
+    if (error.status && error.message) {
+      res.status(error.status).json({ error: error.message });
+    }
+    console.log(error);
+  }
+};
+exports.getUserById = async (req, res, next) => {
+  try {
+    // console.log(req.params.id);
+    const user_id = req.params.id;
+    const [result ] = await userService.getUserById(user_id);
+    console.log(result)
+    res.status(200).json({ message:result});
   } catch (error) {
     if (error.status && error.message) {
       res.status(error.status).json({ error: error.message });

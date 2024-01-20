@@ -3,7 +3,7 @@ const generatePassword = require("../utils/passwordUtil");
 const bcrypt = require("bcryptjs");
 const sendCredential = require("../utils/sendCredentials");
 
-exports.registerUser = async (userData,imageBuffer) => {
+exports.registerUser = async (userData, imageBuffer) => {
   try {
     // console.log(userData.email);
     const [results] = await userModel.getUserByEmail(userData.email);
@@ -18,7 +18,7 @@ exports.registerUser = async (userData,imageBuffer) => {
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);
     const user = { ...userData, password: hashedPassword };
-    const newUser = await userModel.createUser(user,imageBuffer);
+    const newUser = await userModel.createUser(user, imageBuffer);
     console.log(password);
     sendCredential(userData.email, password);
     return newUser;

@@ -28,9 +28,14 @@ class UserModel {
     try {
       connection = await pool.getConnection();
       await connection.beginTransaction();
+      const [image_result] = await connection.query(
+        `INSERT INTO image (image_name, image_data) VALUES (?,?)`,
+        [imageBuffer.originalname, imageBuffer.buffer]
+      );
+      console.log(image_result);
       const [result] = await connection.query(
-        `INSERT INTO user ( fname, mname, lname, dob, email, password, role, profile) Values (?,?, ?, ?, ?,?,?,?)`,
-        [fname, mname, lname, dob, email, password, role,imageBuffer]
+        `INSERT INTO user ( fname, mname, lname, dob, email, password, role, image_id) Values (?,?, ?, ?, ?,?,?,?)`,
+        [fname, mname, lname, dob, email, password, role, image_result.insertId]
       );
       const user_id = result.insertId;
       for (const contact of contacts) {
@@ -94,9 +99,10 @@ class UserModel {
   }
   async getUserById(id) {
     try {
-      const [rows] = await pool.query("SELECT * FROM user WHERE user_id = ?", [
-        id,
-      ]);
+      const [rows] = await pool.query(
+        `SELECT user.user_id,user.fname,user.mname,user.lname,user.email,user.dob,user.role,image.image_name,image.image_data FROM user JOIN image ON user.image_id = image.image_id WHERE user_id = ?`,
+        [id]
+      );
       return [rows];
     } catch (error) {
       console.log(error);

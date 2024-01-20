@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
     }
     req.session.user_id = result[0].user_id;
     console.log(req.session);
-    return res.status(200).json({ message: "Login Success" });
+    return res.status(200).json({ message: "Login Success" ,data:result});
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
