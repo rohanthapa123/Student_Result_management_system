@@ -11,8 +11,8 @@ exports.register = async (req, res) => {
     const userData = req.body;
     const { subject } = req.body;
     const imageBuffer = req.file;
-    console.log(imageBuffer);
-    const { user_id, current_class, section_id, blood_group, nationality } =
+    // console.log(imageBuffer);
+    const { class_id, section_id, blood_group, nationality } =
       req.body;
     // console.log("userData",userData)
     const result = await userService.registerUser(userData,imageBuffer);
@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
         await adminService.insertAdminData(result.insertId);
         break;
       case "student":
-        await studentService.insertStudentData();
+        await studentService.insertStudentData(result.insertId,class_id,section_id,blood_group,nationality);
         break;
       case "teacher":
         await teacherService.insertTeacherData(result.insertId, subject);

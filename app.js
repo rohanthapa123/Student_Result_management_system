@@ -24,7 +24,8 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-
+const noticeRouter = require("./routes/noticeRoute.js");
+app.use(noticeRouter);
 
 const userRouter = require("./routes/userRoute.js");
 app.use(userRouter);
