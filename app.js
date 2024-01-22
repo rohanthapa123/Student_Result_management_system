@@ -2,19 +2,22 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const cookieParser = require("cookie-parser");
-const sessionMiddleware = require("./config/session.js")
-
+const sessionMiddleware = require("./config/session.js");
+const cors = require("cors");
+app.use(cors({
+  origin: ["http://localhost:3000"],
+  credentials: true
+}));
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
 app.use(cookieParser());
-  
-app.use(sessionMiddleware)
+
+app.use(sessionMiddleware);
 
 app.use(express.json());
-
 const publicDirectory = path.join(__dirname, "./public");
 app.use(express.static(publicDirectory));
 

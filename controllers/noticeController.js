@@ -2,7 +2,7 @@ const noticeService = require("../services/noticeService");
 exports.getOpenNotice = async (req, res) => {
   try {
     const [result] = await noticeService.getOpenNotice();
-    console.log(result);
+    // console.log(result);
     res.status(200).json({ data: result });
   } catch (error) {
     console.log("Error at notice Controller", error);
@@ -15,7 +15,7 @@ exports.createNotice = async (req, res) => {
     const notice_data = req.body;
     // console.log(notice_data)
     const [result] = await noticeService.createNotice(notice_data);
-    console.log(result);
+    // console.log(result);
     res.status(200).json({
       message: "Notice added successfully",
       insertId: result.insertId,
