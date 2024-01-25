@@ -1,7 +1,7 @@
 exports.isAuthenticated = (req, res) =>{
     try {
         if(req.session){
-            res.status(200).json({authenticated: true,message: "Authenticated"})
+            res.status(200).json({authenticated: true,message: "Authenticated",role: req.session.role})
         }
     } catch (error) {
         console.log(error);

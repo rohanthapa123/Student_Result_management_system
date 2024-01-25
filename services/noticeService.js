@@ -10,6 +10,24 @@ exports.getOpenNotice = async () =>{
         throw error;
     }
 }
+exports.getNotice = async () =>{
+    try {
+        const [result] = await noticeModel.getNotice();
+        return [result];
+    } catch (error) {
+        console.log("Error at noticeService",error);
+        throw error;
+    }
+}
+exports.deleteNotice = async (id) =>{
+    try {
+        const resp = await noticeModel.deleteNotice(id);
+        return resp;
+    } catch (error) {
+        console.log("Error at noticeService",error);
+        throw error;
+    }
+}
 
 exports.createNotice = async (notice_data) =>{
     try {

@@ -9,9 +9,10 @@ exports.loggedIn = async (req, res, next) => {
       req.user = user[0];
       next();
     } else {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({authenticated: false, message: "Unauthorized" });
     }
   } catch (error) {
+    return res.status(500).json({message: "Internal Server Error"})
     console.log(error);
   }
 };

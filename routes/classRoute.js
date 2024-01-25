@@ -9,5 +9,6 @@ router.post(
   isAdmin,
   classController.createClass
 );
+router.get("/api/class",loggedIn,isAdmin,classController.getClass)
 
 module.exports = router;

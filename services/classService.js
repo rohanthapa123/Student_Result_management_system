@@ -9,3 +9,12 @@ exports.createClass = async (class_name, _class) =>{
         throw error;
     }
 }
+exports.getClass = async () =>{
+    try {
+        const [result] = await classModel.getClass();
+        return [result]
+    } catch (error) {
+        console.log("Error at classService", error)
+        throw error;
+    }
+}

@@ -32,6 +32,28 @@ class NoticeModel {
       throw error;
     }
   }
+  async getNotice() {
+    try {
+      const [result] = await pool.query(
+        "  SELECT notice.notice_id, notice.notice_text, notice.date_posted, notice.class_id, class.class_name from notice left join class on notice.class_id = class.class_id"
+      );
+      return [result];
+    } catch (error) {
+      console.log("Error at notice Model", error);
+      throw error;
+    }
+  }
+  async deleteNotice(id) {
+    try {
+      const [result] = await pool.query(
+        "DELETE FROM notice WHERE notice_id = ?",[id]
+      );
+      return [result];
+    } catch (error) {
+      console.log("Error at notice Model", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new NoticeModel();

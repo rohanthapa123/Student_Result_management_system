@@ -12,6 +12,16 @@ class ClassModel{
             throw error;
         }
     }
+    async getClass(){
+        try {
+            const [result] = await pool.query('SELECT * FROM class');
+            // console.log(result)
+            return [result];
+        } catch (error) {
+            console.log("error at classModel", error);
+            throw error;
+        }
+    }
 }
 
 module.exports = new ClassModel();

@@ -5,8 +5,8 @@ const cookieParser = require("cookie-parser");
 const sessionMiddleware = require("./config/session.js");
 const cors = require("cors");
 app.use(cors({
-  origin: ["http://localhost:3000"],
-  credentials: true
+  origin: "http://localhost:3000",
+  credentials: true,
 }));
 app.use(
   express.urlencoded({

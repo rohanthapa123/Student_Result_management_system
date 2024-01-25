@@ -26,4 +26,7 @@ module.exports = session({
   store: sessionStore,
   resave: false,
   saveUninitialized: true,
+  cookie: {
+    secure: false,
+  },
 });
