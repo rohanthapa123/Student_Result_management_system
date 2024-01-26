@@ -10,12 +10,11 @@ exports.register = async (req, res) => {
   try {
     const userData = req.body;
     const { subject } = req.body;
-    const imageBuffer = req.file;
     // console.log(imageBuffer);
     const { class_id, section_id, blood_group, nationality } =
       req.body;
     // console.log("userData",userData)
-    const result = await userService.registerUser(userData,imageBuffer);
+    const result = await userService.registerUser(userData);
     switch (userData.role) {
       case "admin":
         await adminService.insertAdminData(result.insertId);

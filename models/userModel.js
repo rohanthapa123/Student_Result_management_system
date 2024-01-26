@@ -21,29 +21,37 @@ class UserModel {
       email,
       password,
       role,
-      contacts,
+      primaryContact,
+      secondaryContact,
       temp_address,
       perm_address,
     } = userData;
     try {
       connection = await pool.getConnection();
       await connection.beginTransaction();
+
       const [image_result] = await connection.query(
         `INSERT INTO image (image_name, image_data) VALUES (?,?)`,
         [imageBuffer.originalname, imageBuffer.buffer]
       );
-      console.log(image_result);
+
+      // console.log(image_result);
       const [result] = await connection.query(
         `INSERT INTO user ( fname, mname, lname, dob, email, password, role, image_id) Values (?,?, ?, ?, ?,?,?,?)`,
         [fname, mname, lname, dob, email, password, role, image_result.insertId]
       );
       const user_id = result.insertId;
-      for (const contact of contacts) {
+      await connection.query(
+        "INSERT INTO user_contact (user_id, contact) VALUES (?,?)",
+        [user_id, primaryContact]
+      );
+      if (secondaryContact) {
         await connection.query(
           "INSERT INTO user_contact (user_id, contact) VALUES (?,?)",
-          [user_id, contact]
+          [user_id, secondaryContact]
         );
       }
+
       await connection.query(
         "INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)",
         [user_id, temp_address, "temporary"]
@@ -123,7 +131,7 @@ class UserModel {
         "SELECT role FROM user WHERE user_id = ?",
         [user_id]
       );
-      // console.log(userRole)
+      console.log(userRole);
       // console.log(userRole[0].role);
       const role = userRole[0].role;
       if (role === "teacher") {

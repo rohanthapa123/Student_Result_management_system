@@ -15,6 +15,15 @@ class SectionModel {
       throw error;
     }
   }
+  async getSectionByClass(class_id){
+    try {
+      const [result] = await pool.query("SELECT * FROM section WHERE class_id = ?",[class_id]);
+      return [result];
+    } catch (error) {
+      console.log("Error at section Model",error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new SectionModel();

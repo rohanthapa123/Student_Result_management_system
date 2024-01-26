@@ -2,8 +2,9 @@ const userModel = require("../models/userModel");
 const generatePassword = require("../utils/passwordUtil");
 const bcrypt = require("bcryptjs");
 const sendCredential = require("../utils/sendCredentials");
-
-exports.registerUser = async (userData, imageBuffer) => {
+const fs = require("fs")
+const path = require('path')
+exports.registerUser = async (userData) => {
   try {
     // console.log(userData.email);
     const [results] = await userModel.getUserByEmail(userData.email);
@@ -14,6 +15,16 @@ exports.registerUser = async (userData, imageBuffer) => {
       // error.message = "Email already used";
       throw error;
     }
+    let imageBuffer = null;
+    const rootDir = path.join(__dirname,"..")
+    // console.log(rootDir)
+    const aPath = path.join(rootDir,`/avatar/avatar.jpeg`);
+    // console.log(aPath)
+    imageBuffer ={
+      originalname: "avatar.jpeg",
+      buffer: fs.readFileSync(aPath)
+    } 
+    console.log(imageBuffer)
     const password = generatePassword();
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);

@@ -9,7 +9,6 @@ router.post(
   "/api/register",
   loggedIn,
   isAdmin,
-  upload.single('image'),
   register
 );
 router.get("/api/users", loggedIn, isAdmin, getAllUser);
