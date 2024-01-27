@@ -10,5 +10,6 @@ router.post(
   classController.createClass
 );
 router.get("/api/class",loggedIn,isAdmin,classController.getClass)
+router.delete("/api/class/:id",loggedIn,isAdmin,classController.deleteClassByID)
 
 module.exports = router;

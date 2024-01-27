@@ -18,3 +18,12 @@ exports.getClass = async () =>{
         throw error;
     }
 }
+exports.deleteClassByID = async (class_id) =>{
+    try {
+        const [result] = await classModel.deleteClassByID(class_id);
+        return [result]
+    } catch (error) {
+        console.log("Error at classService", error)
+        throw error;
+    }
+}

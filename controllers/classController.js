@@ -22,3 +22,14 @@ exports.getClass = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+exports.deleteClassByID = async (req, res) => {
+  try {
+    const class_id = req.params.id;
+    const [result] = await classService.deleteClassByID(class_id);
+    // console.log(result);
+    res.status(200).json({ message: "Successfully deleted"});
+  } catch (error) {
+    console.log("error at classController", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

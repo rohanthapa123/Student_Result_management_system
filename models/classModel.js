@@ -22,6 +22,16 @@ class ClassModel{
             throw error;
         }
     }
+    async deleteClassByID(class_id){
+        try {
+            const [result] = await pool.query('DELETE FROM class WHERE class_id = ?',[class_id]);
+            // console.log(result)
+            return [result];
+        } catch (error) {
+            console.log("error at classModel", error);
+            throw error;
+        }
+    }
 }
 
 module.exports = new ClassModel();

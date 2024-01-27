@@ -29,6 +29,8 @@ app.get("/", (req, res) => {
 
 const studentRouter = require("./routes/studentRoute.js");
 app.use(studentRouter);
+const teacherRouter = require("./routes/teacherRoute.js");
+app.use(teacherRouter);
 
 const noticeRouter = require("./routes/noticeRoute.js");
 app.use(noticeRouter);
