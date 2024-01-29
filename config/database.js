@@ -9,5 +9,6 @@ exports.pool = mysql
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
     port : 3307,
+    dateStrings: true
   })
   .promise();

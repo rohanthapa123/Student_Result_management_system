@@ -1,5 +1,5 @@
 const noticeModel = require("../models/noticeModel")
-
+const dateTimeUtil = require("../utils/dateTimeUtil")
 
 exports.getOpenNotice = async () =>{
     try {
@@ -13,6 +13,7 @@ exports.getOpenNotice = async () =>{
 exports.getNotice = async () =>{
     try {
         const [result] = await noticeModel.getNotice();
+        // console.log(result)
         return [result];
     } catch (error) {
         console.log("Error at noticeService",error);
@@ -32,9 +33,14 @@ exports.deleteNotice = async (id) =>{
 exports.createNotice = async (notice_data) =>{
     try {
         // console.log(first)
-        const date = Date.now();
-        const date_posted = new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+        const dateNow = Date.now();
+        console.log("date",dateNow)
+        const {combinedDateTime:date_posted} = dateTimeUtil.getCurrentDateTimeInKathmandu();
+
+        console.log("date_posted",date_posted)
+        // const localDate = new Date(date).toLocaleString('en-US',{timeZone: 'Asia/Kathmandu'}).slice(0, 19).replace('T', ' ');
         // console.log(formattedDate)
+        // const date_posted = localDate.replace(/,/g,'').replace(/\//g,'-');
         const notice_data_with_date = {...notice_data,date_posted};
         const [result] = await noticeModel.addNotice(notice_data_with_date);
         return [result];

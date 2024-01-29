@@ -97,7 +97,7 @@ class UserModel {
 
   async getUserByEmail(email) {
     try {
-      const [rows] = await pool.query("SELECT * FROM user WHERE email = ?", [
+      const [rows] = await pool.query("SELECT user.*,image.image_data FROM user inner join image on user.image_id = image.image_id where email = ?", [
         email,
       ]);
       return [rows];

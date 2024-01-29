@@ -35,8 +35,9 @@ class NoticeModel {
   async getNotice() {
     try {
       const [result] = await pool.query(
-        "  SELECT notice.notice_id, notice.notice_text, notice.date_posted, notice.class_id, class.class_name from notice left join class on notice.class_id = class.class_id"
+        "SELECT notice.notice_id, notice.notice_text, notice.date_posted, notice.class_id, class.class_name from notice left join class on notice.class_id = class.class_id"
       );
+      console.log(result)
       return [result];
     } catch (error) {
       console.log("Error at notice Model", error);

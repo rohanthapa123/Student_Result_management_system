@@ -4,15 +4,29 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const sessionMiddleware = require("./config/session.js");
 const cors = require("cors");
-app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true,
-}));
+const moment = require("moment-timezone");
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+
+moment.tz.setDefault('Asia/Kolkata'); // Using 'Asia/Kolkata' as a workaround
+
+app.use((req, res, next) => {
+  // Manually adjust for the additional 15 minutes offset
+  moment.fn.ktm = function () {
+    return this.utcOffset(5 * 60 + 45);
+  };
+next();
+});
+
 app.use(cookieParser());
 
 app.use(sessionMiddleware);
