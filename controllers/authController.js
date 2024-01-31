@@ -17,19 +17,19 @@ exports.login = async (req, res) => {
     req.session.user_id = result[0].user_id;
     req.session.role = result[0].role;
     console.log(req.session);
-    return res.status(200).json({ message: "Login Success" ,data:result});
+    return res.status(200).json({ message: "Login Success", data: result });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
 exports.logout = (req, res, next) => {
-  req.session.destroy((err) =>{
-    if(err){
-      console.log("error destroying session",error)
+  req.session.destroy((err) => {
+    if (err) {
+      console.log("error destroying session", error);
     }
-  })
-  res.clearCookie("session_id")
+  });
+  res.clearCookie("session_id");
   // res.redirect('/login')
   res.status(200).json({ message: "Logout Successful" });
 };
@@ -38,7 +38,9 @@ exports.changePassword = async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
   const user_id = req.session.user_id;
   try {
+    console.log("current",currentPassword, newPassword);
     const [user] = await userService.getUserById(user_id);
+    console.log("user",user)
     const passwordMatch = await bcrypt.compare(
       currentPassword,
       user[0].password
@@ -49,12 +51,12 @@ exports.changePassword = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(newPassword, 8);
     const result = await userService.changePassword(hashedPassword, user_id);
-    req.session.destroy((err) =>{
-      if(err){
-        console.log("error destroying session",error)
+    req.session.destroy((err) => {
+      if (err) {
+        console.log("error destroying session", error);
       }
-    })
-    res.clearCookie("session_id")
+    });
+    res.clearCookie("session_id");
     res.status(200).json({
       message: "password changed successfully",
       insertId: result.insertId,

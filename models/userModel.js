@@ -10,7 +10,7 @@ const { pool } = require("../config/database");
 // module.exports = getUsers;
 
 class UserModel {
-  async createUser(userData, imageBuffer) {
+  async createUser(userData) {
     // console.log(userData);
     let connection;
     const {
@@ -21,6 +21,7 @@ class UserModel {
       email,
       password,
       role,
+      gender,
       primaryContact,
       secondaryContact,
       temp_address,
@@ -30,15 +31,12 @@ class UserModel {
       connection = await pool.getConnection();
       await connection.beginTransaction();
 
-      const [image_result] = await connection.query(
-        `INSERT INTO image (image_name, image_data) VALUES (?,?)`,
-        [imageBuffer.originalname, imageBuffer.buffer]
-      );
+      
 
       // console.log(image_result);
       const [result] = await connection.query(
-        `INSERT INTO user ( fname, mname, lname, dob, email, password, role, image_id) Values (?,?, ?, ?, ?,?,?,?)`,
-        [fname, mname, lname, dob, email, password, role, image_result.insertId]
+        `INSERT INTO user ( fname, mname, lname, dob, email, password, role, gender) Values (?,?, ?, ?, ?,?,?,?)`,
+        [fname, mname, lname, dob, email, password, role,gender]
       );
       const user_id = result.insertId;
       await connection.query(
@@ -78,6 +76,7 @@ class UserModel {
                   user.role,
                   user.email,
                   user.dob,
+                  user.image,
       GROUP_CONCAT(DISTINCT user_contact.contact ORDER BY user_contact.user_id) as contacts,
       MAX(CASE WHEN user_address.address_type = 'temporary' THEN user_address.address END) as temp_address,
       MAX(CASE WHEN user_address.address_type = 'permanent' THEN user_address.address END) as permanent_address
@@ -97,9 +96,10 @@ class UserModel {
 
   async getUserByEmail(email) {
     try {
-      const [rows] = await pool.query("SELECT user.*,image.image_data FROM user inner join image on user.image_id = image.image_id where email = ?", [
-        email,
-      ]);
+      const [rows] = await pool.query(
+        "SELECT user.* FROM user where email = ?",
+        [email]
+      );
       return [rows];
     } catch (error) {
       console.log(error);
@@ -108,7 +108,7 @@ class UserModel {
   async getUserById(id) {
     try {
       const [rows] = await pool.query(
-        `SELECT user.user_id,user.fname,user.mname,user.lname,user.email,user.dob,user.role,image.image_name,image.image_data FROM user JOIN image ON user.image_id = image.image_id WHERE user_id = ?`,
+        `SELECT user.user_id,user.fname,password,user.mname,user.lname,user.email,user.dob,user.role,image FROM user  WHERE user_id = ?`,
         [id]
       );
       return [rows];
@@ -121,32 +121,6 @@ class UserModel {
     try {
       connection = await pool.getConnection();
       await connection.beginTransaction();
-      await connection.query("DELETE FROM user_address WHERE user_id = ?", [
-        user_id,
-      ]);
-      await connection.query("DELETE FROM user_contact WHERE user_id = ?", [
-        user_id,
-      ]);
-      const [userRole] = await connection.query(
-        "SELECT role FROM user WHERE user_id = ?",
-        [user_id]
-      );
-      console.log(userRole);
-      // console.log(userRole[0].role);
-      const role = userRole[0].role;
-      if (role === "teacher") {
-        await connection.query("DELETE FROM teacher WHERE user_id = ?", [
-          user_id,
-        ]);
-      } else if (role === "student") {
-        await connection.query("DELETE FROM student WHERE user_id = ?", [
-          user_id,
-        ]);
-      } else if (role === "admin") {
-        await connection.query("DELETE FROM admin WHERE user_id = ?", [
-          user_id,
-        ]);
-      }
 
       await connection.query("DELETE FROM user WHERE user_id = ?", [user_id]);
       await connection.commit();

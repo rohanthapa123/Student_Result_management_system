@@ -15,7 +15,7 @@ class TeacherModel {
   async getAllTeacher() {
     try {
       let [result] = await pool.query(
-        " select teacher.user_id, fname, mname, lname, role, email, dob,image_name,subject,teacher_id from user inner join teacher on user.user_id = teacher.user_id inner join image on user.image_id = image.image_id"
+        " select teacher.user_id, fname, mname, lname, role, email, dob,image,subject,teacher_id from user inner join teacher on user.user_id = teacher.user_id"
       );
       return [result];
     } catch (error) {

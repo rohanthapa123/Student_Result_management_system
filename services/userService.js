@@ -15,21 +15,13 @@ exports.registerUser = async (userData) => {
       // error.message = "Email already used";
       throw error;
     }
-    let imageBuffer = null;
-    const rootDir = path.join(__dirname,"..")
-    // console.log(rootDir)
-    const aPath = path.join(rootDir,`/avatar/avatar.jpeg`);
-    // console.log(aPath)
-    imageBuffer ={
-      originalname: "avatar.jpeg",
-      buffer: fs.readFileSync(aPath)
-    } 
-    console.log(imageBuffer)
+    
+    
     const password = generatePassword();
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);
     const user = { ...userData, password: hashedPassword };
-    const newUser = await userModel.createUser(user, imageBuffer);
+    const newUser = await userModel.createUser(user);
     console.log(password);
     sendCredential(userData.email, password);
     return newUser;
