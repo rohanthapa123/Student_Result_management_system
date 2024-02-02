@@ -31,12 +31,10 @@ class UserModel {
       connection = await pool.getConnection();
       await connection.beginTransaction();
 
-      
-
       // console.log(image_result);
       const [result] = await connection.query(
         `INSERT INTO user ( fname, mname, lname, dob, email, password, role, gender) Values (?,?, ?, ?, ?,?,?,?)`,
-        [fname, mname, lname, dob, email, password, role,gender]
+        [fname, mname, lname, dob, email, password, role, gender]
       );
       const user_id = result.insertId;
       await connection.query(
@@ -108,7 +106,7 @@ class UserModel {
   async getUserById(id) {
     try {
       const [rows] = await pool.query(
-        `SELECT user.user_id,user.fname,password,user.mname,user.lname,user.email,user.dob,user.role,image FROM user  WHERE user_id = ?`,
+        `SELECT user.user_id,user.fname,password,user.mname,user.lname,user.email,user.dob,user.role,gender,image FROM user  WHERE user_id = ?`,
         [id]
       );
       return [rows];
@@ -138,6 +136,44 @@ class UserModel {
       return result;
     } catch (error) {
       console.log(error);
+      throw error;
+    }
+  }
+  async getOwnData(user_id) {
+    try {
+      const [result] = await pool.query(
+        `SELECT
+        user.user_id,
+                    user.fname,
+                    user.mname,
+                    user.lname,
+                    user.role,
+                    user.email,
+                    user.dob,
+                    user.image,
+                    user.gender,
+        GROUP_CONCAT(DISTINCT user_contact.contact ORDER BY user_contact.user_id) as contacts,
+        MAX(CASE WHEN user_address.address_type = 'temporary' THEN user_address.address END) as temp_address,
+        MAX(CASE WHEN user_address.address_type = 'permanent' THEN user_address.address END) as permanent_address
+    FROM 
+        user 
+        LEFT JOIN user_address ON user.user_id = user_address.user_id 
+        LEFT JOIN user_contact ON user.user_id = user_contact.user_id
+        WHERE user.user_id = ?
+    GROUP BY 
+        user.user_id `,[user_id]
+      );
+      return [result];
+    } catch (error) {
+      throw error;
+    }
+  }
+  async changeProfile(image, user_id){
+    try {
+      const result = await pool.query("UPDATE user SET image = ? WHERE user_id = ?",[image, user_id]);
+      return result;
+    } catch (error) {
+      console.log(error)
       throw error;
     }
   }

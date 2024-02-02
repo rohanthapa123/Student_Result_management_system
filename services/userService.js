@@ -62,6 +62,20 @@ exports.getUserById = async (id) => {
     throw error;
   }
 };
+exports.getOwnData = async (id) => {
+  try {
+    const [results] = await userModel.getOwnData(id);
+    const contactsArray = results[0].contacts ? results[0].contacts.split(",") : [];
+    const mixedResult = {
+      ...results[0],
+      contacts: contactsArray
+    }
+    return [mixedResult];
+  } catch (error) {
+    console.log("error at user service", error);
+    throw error;
+  }
+};
 exports.getUserByEmail = async (email) => {
   try {
     const [results] = await userModel.getUserByEmail(email);
@@ -81,3 +95,13 @@ exports.changePassword = async (password, user_id) => {
     throw error;
   }
 };
+
+exports.changeProfile = async (image, user_id) =>{
+  try {
+    const result = await userModel.changeProfile(image,user_id);
+    return result;
+  } catch (error) {
+    console.log(error)
+    throw error;
+  }
+}

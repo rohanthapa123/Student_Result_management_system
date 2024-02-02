@@ -11,8 +11,7 @@ exports.register = async (req, res) => {
     const userData = req.body;
     const { subject } = req.body;
     // console.log(imageBuffer);
-    const { class_id, section_id, blood_group, nationality } =
-      req.body;
+    const { class_id, section_id, blood_group, nationality } = req.body;
     // console.log("userData",userData)
     const result = await userService.registerUser(userData);
     switch (userData.role) {
@@ -20,7 +19,13 @@ exports.register = async (req, res) => {
         await adminService.insertAdminData(result.insertId);
         break;
       case "student":
-        await studentService.insertStudentData(result.insertId,class_id,section_id,blood_group,nationality);
+        await studentService.insertStudentData(
+          result.insertId,
+          class_id,
+          section_id,
+          blood_group,
+          nationality
+        );
         break;
       case "teacher":
         await teacherService.insertTeacherData(result.insertId, subject);
@@ -42,7 +47,7 @@ exports.register = async (req, res) => {
 };
 
 exports.getAllUser = async (req, res, next) => {
-  console.log(req.session);
+  // console.log(req.session);
   try {
     const [rows] = await userService.getAllUser();
     res.status(200).json({ data: rows });
@@ -124,13 +129,41 @@ exports.getUserById = async (req, res, next) => {
   try {
     // console.log(req.params.id);
     const user_id = req.params.id;
-    const [result ] = await userService.getUserById(user_id);
-    console.log(result)
-    res.status(200).json({ message:result});
+    const [result] = await userService.getUserById(user_id);
+    console.log(result);
+    res.status(200).json({ message: result });
   } catch (error) {
     if (error.status && error.message) {
       res.status(error.status).json({ error: error.message });
     }
     console.log(error);
+  }
+};
+exports.getOwnDetail = async (req, res, next) => {
+  try {
+    // console.log(req.params.id);
+    const user_id = req.session.user_id;
+    const [result] = await userService.getOwnData(user_id);
+    console.log(result);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    if (error.status && error.message) {
+      res.status(error.status).json({ error: error.message });
+    }
+    console.log(error);
+  }
+};
+
+exports.changeProfilePicture = async (req, res, next) => {
+  try {
+    const image = req.file;
+    const user_id = req.session.user_id;
+    const result = await userService.changeProfile(image.filename,user_id);
+    console.log("requst",image)
+
+    res.status(200).json({ message: "Image Uploaded" });
+  } catch (error) {
+    console.log("Error at authController changing picture", error);
+    res.status(500).json({error: "Internal Server Error"})
   }
 };
