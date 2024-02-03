@@ -24,6 +24,15 @@ class SectionModel {
       throw error;
     }
   }
+  async deleteSectionById(section_id){
+    try {
+      const [result] = await pool.query("DELETE FROM section WHERE section_id = ?",[section_id]);
+      return [result];
+    } catch (error) {
+      console.log("Error at section Model",error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new SectionModel();

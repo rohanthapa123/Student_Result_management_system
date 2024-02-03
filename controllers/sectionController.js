@@ -30,3 +30,18 @@ exports.getSectionByClass = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+exports.deleteSectionById = async (req, res) => {
+  try {
+    const section_id = req.params.id;
+    const [result] = await sectionService.deleteSectionById(section_id);
+    res
+      .status(200)
+      .json({
+        message: "Section deleted successfully",
+        data: result,
+      });
+  } catch (error) {
+    console.log("Error at sectionController", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

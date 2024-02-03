@@ -37,6 +37,7 @@ exports.isTeacher = (req, res, next) => {
 
 exports.isStudent = (req, res, next) => {
   //   console.log(req.user);
+  console.log("user",req.user)
   if (req.user && req.user.role == "student") {
     next();
   } else {

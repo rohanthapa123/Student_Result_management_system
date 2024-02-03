@@ -3,10 +3,10 @@ const { pool } = require("../config/database");
 class NoticeModel {
   async addNotice(noticeData) {
     try {
-      const { notice_text, date_posted, class_id } = noticeData;
+      const { notice_text,  class_id } = noticeData;
       const [result] = await pool.query(
-        "INSERT INTO notice (notice_text, date_posted, class_id) VALUES (?,?,?)",
-        [notice_text, date_posted, class_id]
+        "INSERT INTO notice (notice_text,  class_id) VALUES (?,?)",
+        [notice_text,  class_id]
       );
       return [result];
     } catch (error) {
@@ -14,8 +14,11 @@ class NoticeModel {
       throw error;
     }
   }
-  async getNoticeByClass() {
+  async getNoticeByClass(user_id) {
+
     try {
+      const [ result] = await pool.query(' select * from notice where class_id = (select class_id from student where user_id = ?)',[user_id])
+      return [result] ;
     } catch (error) {
       console.log("Error at notice Model", error);
       throw error;

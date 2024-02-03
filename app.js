@@ -56,6 +56,9 @@ app.use(teacherRouter);
 const noticeRouter = require("./routes/noticeRoute.js");
 app.use(noticeRouter);
 
+const complainRouter = require("./routes/complainRoute.js");
+app.use(complainRouter);
+
 const userRouter = require("./routes/userRoute.js");
 app.use(userRouter);
 
