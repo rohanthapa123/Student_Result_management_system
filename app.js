@@ -65,6 +65,9 @@ app.use(userRouter);
 const classRouter = require("./routes/classRoute.js");
 app.use(classRouter);
 
+const examRouter = require("./routes/examRoute.js");
+app.use(examRouter);
+
 const sectionRouter = require("./routes/sectionRoute.js");
 app.use(sectionRouter);
 

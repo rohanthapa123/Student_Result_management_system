@@ -9,7 +9,7 @@ exports.register = async (req, res) => {
 
   try {
     const userData = req.body;
-    const { subject } = req.body;
+    const { subject_id } = req.body;
     // console.log(imageBuffer);
     const { class_id, section_id, blood_group, nationality } = req.body;
     // console.log("userData",userData)
@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
         );
         break;
       case "teacher":
-        await teacherService.insertTeacherData(result.insertId, subject);
+        await teacherService.insertTeacherData(result.insertId, subject_id);
         break;
       default:
         const error = new Error("Role undefined");
