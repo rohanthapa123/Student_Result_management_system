@@ -68,6 +68,9 @@ app.use(classRouter);
 const sectionRouter = require("./routes/sectionRoute.js");
 app.use(sectionRouter);
 
+const subjectRouter = require("./routes/subjectRoute.js");
+app.use(subjectRouter)
+
 const auth = require("./routes/auth.js");
 const multer = require("multer");
 const { loggedIn } = require("./middleware/auth.middleware.js");

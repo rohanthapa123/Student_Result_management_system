@@ -31,7 +31,7 @@ class ComplainModel {
   async getComplain() {
     try {
       const [result] = await pool.query(
-        "SELECT complain.*,fname,mname, lname, student.class_id, student.section_id,class.class_name,section.section_name from complain inner join user on complain.user_id = user.user_id inner join student on complain.user_id = student.user_id inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id",
+        "SELECT complain.*,fname,mname, lname, student.class_id, student.section_id,class.class_name,section.section_name from complain inner join user on complain.user_id = user.user_id inner join student on complain.user_id = student.user_id inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id order by complain.created_at desc",
       );
       console.log(result)
       return [result];
