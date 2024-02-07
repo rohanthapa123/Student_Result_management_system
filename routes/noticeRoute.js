@@ -3,6 +3,7 @@ const {
   loggedIn,
   isAdmin,
   isStudent,
+  isTeacherOrAdmin,
 } = require("../middleware/auth.middleware");
 const {
   getOpenNotice,
@@ -14,8 +15,8 @@ const {
 
 const router = express.Router();
 
-router.post("/api/notice", loggedIn, isAdmin, createNotice);
-router.delete("/api/notice/:id", loggedIn, isAdmin, deleteNotice);
+router.post("/api/notice", loggedIn, isTeacherOrAdmin, createNotice);
+router.delete("/api/notice/:id", loggedIn, isTeacherOrAdmin, deleteNotice);
 router.get("/api/opennotice", getOpenNotice);
 router.get("/api/notice", loggedIn, getNotice);
 router.get("/api/classnotice", loggedIn, isStudent, getNoticeByClass);

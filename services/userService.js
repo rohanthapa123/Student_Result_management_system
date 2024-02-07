@@ -53,6 +53,15 @@ exports.getAllUser = async () => {
     throw error;
   }
 };
+exports.getUserCount = async () => {
+  try {
+    const [results] = await userModel.getUserCount();
+    return [results];
+  } catch (error) {
+    console.log("error at user service", error);
+    throw error;
+  }
+};
 exports.getUserById = async (id) => {
   try {
     const [results] = await userModel.getUserById(id);

@@ -114,6 +114,16 @@ class UserModel {
       console.log(error);
     }
   }
+  async getUserCount() {
+    try {
+      const [rows] = await pool.query(
+        `SELECT role, COUNT(*) as no_of_user FROM user GROUP BY role`
+      );
+      return [rows];
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async deleteUserById(user_id) {
     let connection;
     try {
@@ -161,19 +171,23 @@ class UserModel {
         LEFT JOIN user_contact ON user.user_id = user_contact.user_id
         WHERE user.user_id = ?
     GROUP BY 
-        user.user_id `,[user_id]
+        user.user_id `,
+        [user_id]
       );
       return [result];
     } catch (error) {
       throw error;
     }
   }
-  async changeProfile(image, user_id){
+  async changeProfile(image, user_id) {
     try {
-      const result = await pool.query("UPDATE user SET image = ? WHERE user_id = ?",[image, user_id]);
+      const result = await pool.query(
+        "UPDATE user SET image = ? WHERE user_id = ?",
+        [image, user_id]
+      );
       return result;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw error;
     }
   }

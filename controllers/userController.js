@@ -55,6 +55,15 @@ exports.getAllUser = async (req, res, next) => {
     console.log(error);
   }
 };
+exports.getUserCount = async (req, res, next) => {
+  // console.log(req.session);
+  try {
+    const [rows] = await userService.getUserCount();
+    res.status(200).json({ data: rows });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 exports.updateUser = async (req, res, next) => {
   console.log(req.body);

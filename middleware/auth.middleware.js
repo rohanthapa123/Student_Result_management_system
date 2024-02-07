@@ -46,7 +46,7 @@ exports.isStudent = (req, res, next) => {
 };
 exports.isTeacherOrAdmin = (req, res, next) => {
   //   console.log(req.user);
-  if (req.user && (req.user.role == "student" || req.user.role == "teacher")) {
+  if (req.user && (req.user.role == "admin" || req.user.role == "teacher")) {
     next();
   } else {
     return res.status(403).json({ message: "Permission denied" });
