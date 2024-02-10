@@ -42,42 +42,28 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+
+
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.get("/api/images/:filename", authMiddleware.loggedIn, (req, res) => {
   const filename = req.params.filename;
   res.sendFile(path.join(__dirname, "images", filename));
 });
 
-const studentRouter = require("./routes/studentRoute.js");
-app.use(studentRouter);
-const teacherRouter = require("./routes/teacherRoute.js");
-app.use(teacherRouter);
 
-const noticeRouter = require("./routes/noticeRoute.js");
-app.use(noticeRouter);
 
-const complainRouter = require("./routes/complainRoute.js");
-app.use(complainRouter);
 
-const userRouter = require("./routes/userRoute.js");
-app.use(userRouter);
+const routers = require("./routes/index.js");
 
-const classRouter = require("./routes/classRoute.js");
-app.use(classRouter);
+// Use all routers
+routers.forEach((router) => {
+  app.use(router);
+});
 
-const examRouter = require("./routes/examRoute.js");
-app.use(examRouter);
 
-const sectionRouter = require("./routes/sectionRoute.js");
-app.use(sectionRouter);
 
-const subjectRouter = require("./routes/subjectRoute.js");
-app.use(subjectRouter)
 
-const auth = require("./routes/auth.js");
 const multer = require("multer");
-const { loggedIn } = require("./middleware/auth.middleware.js");
-app.use(auth);
 
 app.use((err, req, res, next) => {
   console.log(err);
@@ -94,6 +80,10 @@ app.use((err, req, res, next) => {
   }
   res.status(500).send("<h1>Something broke!</h1>");
 });
+
+
+
+
 
 app.listen(8080, () => {
   console.log("server is runnning on port 8080");
