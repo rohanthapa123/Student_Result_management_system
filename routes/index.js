@@ -10,6 +10,7 @@ const markRouter = require('./markRoute');
 const sectionRouter = require('./sectionRoute');
 const subjectRouter = require('./subjectRoute');
 const auth = require("./auth.js");
+const adminRouter = require('./adminRoute.js')
 
 module.exports = [
   studentRouter,
@@ -22,5 +23,6 @@ module.exports = [
   markRouter,
   sectionRouter,
   subjectRouter,
+  adminRouter,
   auth,
 ];
