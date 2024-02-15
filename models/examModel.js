@@ -28,6 +28,15 @@ class ExamModel{
             throw error;
         }
     }
+    async getExamByClassId(class_id){
+        try {
+            const [result] = await pool.query(" SELECT exam.*, class_name, subject_name from exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id WHERE exam.class_id = ?",[class_id])
+            return [result]
+        } catch (error) {
+            console.log("Error at exam model",error);
+            throw error;
+        }
+    }
 }
 
 module.exports = new ExamModel()

@@ -30,6 +30,15 @@ exports.getMarksOfStudentByExam = async (student_id, exam_id) => {
     throw error;
   }
 };
+exports.getMarksByClass = async (class_id) => {
+  try {
+    const [result] = await MarksModel.getMarksByClass(class_id);
+    return [result];
+  } catch (error) {
+    console.log("Error at marksService", error);
+    throw error;
+  }
+};
 exports.deleteMarksById = async (marks_id) => {
   try {
     const [result] = await MarksModel.deleteMarkById(marks_id);

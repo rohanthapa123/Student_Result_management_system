@@ -14,6 +14,12 @@ router.get(
   isTeacherOrAdmin,
   markController.getMarksOfStudentByExam
 );
+router.get(
+  "/api/mark/:id",
+  loggedIn,
+  isTeacherOrAdmin,
+  markController.getMarksByClass
+);
 router.delete(
   "/api/mark/:id",
   loggedIn,

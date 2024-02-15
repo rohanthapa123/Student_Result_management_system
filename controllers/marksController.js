@@ -37,6 +37,18 @@ exports.getMarksOfStudentByExam = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+exports.getMarksByClass = async (req, res) => {
+  const id = req.params.id;
+  // console.log(req.params.id)
+  try {
+    const [result] = await marksService.getMarksByClass(id);
+    console.log(result);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.log("error at markController", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 exports.deleteMarksById = async (req, res) => {
   try {
     const marks_id = req.params.id;

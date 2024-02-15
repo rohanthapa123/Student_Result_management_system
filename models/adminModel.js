@@ -15,7 +15,7 @@ class AdminModel {
   async getAllAdmins() {
     try {
       const [result] = await pool.query(
-        " select fname, mname, lname, role, email, image, dob, admin_id FROM user INNER JOIN admin ON user.user_id = admin.user_id"
+        " select fname, mname, lname, role, email, image, dob,user.user_id, admin_id FROM user INNER JOIN admin ON user.user_id = admin.user_id"
       );
       return [result];
     } catch (error) {
