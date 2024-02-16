@@ -167,12 +167,12 @@ exports.changeProfilePicture = async (req, res, next) => {
   try {
     const image = req.file;
     const user_id = req.session.user_id;
-    const result = await userService.changeProfile(image.filename,user_id);
-    console.log("requst",image)
+    const result = await userService.changeProfile(image.filename, user_id);
+    console.log("requst", image);
 
     res.status(200).json({ message: "Image Uploaded" });
   } catch (error) {
     console.log("Error at authController changing picture", error);
-    res.status(500).json({error: "Internal Server Error"})
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

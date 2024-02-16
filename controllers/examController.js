@@ -40,6 +40,17 @@ exports.getExamByClassId = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+exports.getExamOfTeacherClass = async (req, res) => {
+  try {
+    const user_id = req.session.user_id;
+    const [result] = await examService.getExamOfTeacherClass(user_id);
+    // console.log(result);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.log("error at examController", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 exports.deleteExamById = async (req, res) => {
   try {
     const exam_id = req.params.id;

@@ -1,15 +1,21 @@
 const express = require("express");
 
 const router = express.Router();
-const { loggedIn, isAdmin } = require("../middleware/auth.middleware");
+const {
+  loggedIn,
+  isAdmin,
+  isTeacher,
+  isTeacherOrAdmin,
+} = require("../middleware/auth.middleware");
 const examController = require("../controllers/examController");
 router.post("/api/exam", loggedIn, isAdmin, examController.createExam);
 router.get("/api/exam", loggedIn, isAdmin, examController.getExams);
+router.get("/api/exam/:id", loggedIn, isTeacherOrAdmin, examController.getExamByClassId);
 router.get(
-  "/api/exam/:id",
+  "/api/examforteacher",
   loggedIn,
-  isAdmin,
-  examController.getExamByClassId
+  isTeacher,
+  examController.getExamOfTeacherClass
 );
 router.delete(
   "/api/exam/:id",

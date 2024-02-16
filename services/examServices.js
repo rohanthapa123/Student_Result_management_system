@@ -27,6 +27,15 @@ exports.getExamByClassId = async (class_id) =>{
         throw error;
     }
 }
+exports.getExamOfTeacherClass = async (user_id) =>{
+    try {
+        const [result] = await examModel.getExamOfTeacherClass(user_id);
+        return [result]
+    } catch (error) {
+        console.log("Error at examService", error)
+        throw error;
+    }
+}
 exports.deleteExamById = async (exam_id) =>{
     try {
         const [result] = await examModel.deleteExamById(exam_id);

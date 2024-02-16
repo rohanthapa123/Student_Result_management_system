@@ -1,7 +1,7 @@
 const { getUserById } = require("../models/userModel");
 
 exports.loggedIn = async (req, res, next) => {
-  console.log("session",req.session);
+  console.log("session", req.session);
   try {
     if (req.session && req.session.user_id) {
       const user_id = req.session.user_id;
@@ -9,10 +9,12 @@ exports.loggedIn = async (req, res, next) => {
       req.user = user[0];
       next();
     } else {
-      return res.status(401).json({authenticated: false, message: "Unauthorized" });
+      return res
+        .status(401)
+        .json({ authenticated: false, message: "Unauthorized" });
     }
   } catch (error) {
-    return res.status(500).json({message: "Internal Server Error"})
+    return res.status(500).json({ message: "Internal Server Error" });
     console.log(error);
   }
 };
@@ -28,16 +30,19 @@ exports.isAdmin = (req, res, next) => {
 
 exports.isTeacher = (req, res, next) => {
   //   console.log(req.user);
+  // console.log("hello");
   if (req.user && req.user.role == "teacher") {
+    // console.log("Access Granted");
     next();
   } else {
+    // console.log(req.user.role);
     return res.status(403).json({ message: "Permission denied" });
   }
 };
 
 exports.isStudent = (req, res, next) => {
   //   console.log(req.user);
-  console.log("user",req.user)
+  console.log("user", req.user);
   if (req.user && req.user.role == "student") {
     next();
   } else {
