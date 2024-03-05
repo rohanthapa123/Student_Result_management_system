@@ -38,11 +38,14 @@ exports.getMarksOfStudentByExam = async (req, res) => {
   }
 };
 exports.getMarksByClass = async (req, res) => {
-  const id = req.params.id;
+  const exam_id = req.query.exam_id;
+  const class_id = req.query.class_id;
   // console.log(req.params.id)
+  console.log(req.query.exam_id);
+  console.log(req.query.class_id);
   try {
-    const [result] = await marksService.getMarksByClass(id);
-    console.log(result);
+    const [result] = await marksService.getMarksByClass(class_id, exam_id);
+    // console.log(result);
     res.status(200).json({ data: result });
   } catch (error) {
     console.log("error at markController", error);

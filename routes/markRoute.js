@@ -15,7 +15,7 @@ router.get(
   markController.getMarksOfStudentByExam
 );
 router.get(
-  "/api/mark/:id",
+  "/api/studentMark",
   loggedIn,
   isTeacherOrAdmin,
   markController.getMarksByClass

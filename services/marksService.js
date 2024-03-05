@@ -30,9 +30,9 @@ exports.getMarksOfStudentByExam = async (student_id, exam_id) => {
     throw error;
   }
 };
-exports.getMarksByClass = async (class_id) => {
+exports.getMarksByClass = async (class_id, exam_id) => {
   try {
-    const [result] = await MarksModel.getMarksByClass(class_id);
+    const [result] = await MarksModel.getMarksByClass(class_id , exam_id);
     return [result];
   } catch (error) {
     console.log("Error at marksService", error);

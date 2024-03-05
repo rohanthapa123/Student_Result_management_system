@@ -39,48 +39,37 @@ class MarksModel {
       throw error;
     }
   }
-  async getMarksByClass(class_id) {
+  async getMarksByClass(class_id, exam_id) {
     try {
       // console.log(class_id);
       const [result] = await pool.query(
         `SELECT
-        student_id,
         fname,
         mname,
         lname,
-        section_name,
+        student.*,
         class_name,
-        exam_name,
-        JSON_ARRAYAGG(subject_name) AS subjects,
-        JSON_ARRAYAGG(marks_obtained) AS marks_obtained,
-        JSON_ARRAYAGG(remarks) AS remarks,
-        JSON_ARRAYAGG(grade) AS grade
-    FROM (
-        SELECT DISTINCT
-            marks.student_id,
-            fname,
-            mname,
-            lname,
-            section_name,
-            class_name,
-            exam_name,
-            subject_name,
-            marks_obtained,
-            remarks,
-            grade
-        FROM marks
-        INNER JOIN student ON marks.student_id = student.student_id
-        INNER JOIN user ON student.user_id = user.user_id
-        INNER JOIN subject ON marks.subject_id = subject.subject_id
-        INNER JOIN class ON student.class_id = class.class_id
-        INNER JOIN section ON student.section_id = section.section_id
-        INNER JOIN exam ON marks.exam_id = exam.exam_id
-        WHERE student.class_id = ?
-    ) AS subquery
-    GROUP BY student_id, exam_name;
+        subject_name,
+        exam.exam_id,
+        exam.subject_id,
+        marks_obtained,
+        remarks,
+        grade
+    FROM
+        student
+    INNER JOIN user ON student.user_id = user.user_id
+    INNER JOIN class ON student.class_id = class.class_id
+    INNER JOIN exam ON exam.class_id = student.class_id
+    INNER JOIN subject ON subject.subject_id = exam.subject_id
+    LEFT JOIN marks ON marks.student_id = student.student_id AND marks.subject_id = subject.subject_id AND marks.exam_id = exam.exam_id
+    WHERE
+        student.class_id = ? AND exam.exam_id = ?
+    ORDER BY
+        fname;
+    
     
      `,
-        [class_id]
+        [class_id, exam_id]
       );
       // console.log(result);
       return [result];
