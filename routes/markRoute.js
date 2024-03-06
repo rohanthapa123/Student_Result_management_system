@@ -5,20 +5,27 @@ const {
   loggedIn,
   isAdmin,
   isTeacherOrAdmin,
+  isStudent,
 } = require("../middleware/auth.middleware");
 const markController = require("../controllers/marksController");
 router.post("/api/mark", loggedIn, isTeacherOrAdmin, markController.insertMark);
 router.get(
-  "/api/mark",
+  "/api/result/:term",
   loggedIn,
-  isTeacherOrAdmin,
-  markController.getMarksOfStudentByExam
+  isStudent,
+  markController.getResult
 );
 router.get(
   "/api/studentMark",
   loggedIn,
   isTeacherOrAdmin,
   markController.getMarksByClass
+);
+router.post(
+  "/api/insertMarks",
+  loggedIn,
+  isTeacherOrAdmin,
+  markController.insertMark
 );
 router.delete(
   "/api/mark/:id",

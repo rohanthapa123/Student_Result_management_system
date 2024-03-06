@@ -2,13 +2,14 @@ const examService = require("../services/examServices");
 
 exports.createExam = async (req, res) => {
   try {
-    const { exam_name, class_id, subject_id, exam_date } = req.body;
+    const { exam_name, class_id, subject_id, exam_date, term } = req.body;
     console.log(req.body);
     const result = await examService.createExam(
       exam_name,
       class_id,
       subject_id,
-      exam_date
+      exam_date,
+      term
     );
     // console.log(result);
     res

@@ -1,29 +1,19 @@
 const MarksModel = require("../models/marksModel");
 
-exports.insertMark = async (subject_id,
-    exam_id,
-    student_id,
-    marks_obtained,
-    remarks,
-    grade) => {
+exports.insertMark = async (marks) => {
   try {
-    const result = await MarksModel.insertMark(
-      subject_id,
-      exam_id,
-      student_id,
-      marks_obtained,
-      remarks,
-      grade
-    );
+    const result = await MarksModel.insertMark(marks);
     return result;
   } catch (error) {
     console.log("Error at marksService", error);
     throw error;
   }
 };
-exports.getMarksOfStudentByExam = async (student_id, exam_id) => {
+exports.getResult = async ( user_id, exam_term) => {
   try {
-    const [result] = await MarksModel.getMarksOfStudentByExam(student_id, exam_id);
+    const [result] = await MarksModel.getResult(
+            user_id, exam_term
+    );
     return [result];
   } catch (error) {
     console.log("Error at marksService", error);
@@ -32,7 +22,7 @@ exports.getMarksOfStudentByExam = async (student_id, exam_id) => {
 };
 exports.getMarksByClass = async (class_id, exam_id) => {
   try {
-    const [result] = await MarksModel.getMarksByClass(class_id , exam_id);
+    const [result] = await MarksModel.getMarksByClass(class_id, exam_id);
     return [result];
   } catch (error) {
     console.log("Error at marksService", error);

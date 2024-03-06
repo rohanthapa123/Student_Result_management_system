@@ -1,9 +1,9 @@
 const { pool } = require("../config/database");
 
 class ExamModel{
-    async createExam(exam_name,class_id, subject_id,exam_date){
+    async createExam(exam_name,class_id, subject_id,exam_date, term){
         try {
-            const [result] = await pool.query("INSERT INTO exam (exam_name, class_id, subject_id, exam_date) VALUES (?,?,?,?)",[exam_name,class_id,subject_id,exam_date])
+            const [result] = await pool.query("INSERT INTO exam (exam_name, class_id, subject_id, exam_date, term) VALUES (?,?,?,?,?)",[exam_name,class_id,subject_id,exam_date,term])
             return [result]
         } catch (error) {
             console.log("Error at exam model",error);

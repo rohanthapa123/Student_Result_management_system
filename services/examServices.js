@@ -1,8 +1,8 @@
 const examModel = require('../models/examModel')
 
-exports.createExam = async (exam_name,class_id, subject_id,exam_date) =>{
+exports.createExam = async (exam_name,class_id, subject_id,exam_date, term) =>{
     try {
-        const result = await examModel.createExam(exam_name,class_id, subject_id,exam_date);
+        const result = await examModel.createExam(exam_name,class_id, subject_id,exam_date, term);
         return result
     } catch (error) {
         console.log("Error at examService", error)
