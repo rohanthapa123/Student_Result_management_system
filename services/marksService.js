@@ -11,10 +11,10 @@ exports.insertMark = async (marks) => {
 };
 exports.getResult = async ( user_id, exam_term) => {
   try {
-    const [result] = await MarksModel.getResult(
+    const result = await MarksModel.getResult(
             user_id, exam_term
     );
-    return [result];
+    return result;
   } catch (error) {
     console.log("Error at marksService", error);
     throw error;

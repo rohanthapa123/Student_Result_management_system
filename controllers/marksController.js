@@ -25,7 +25,7 @@ exports.getResult = async (req, res) => {
   const user_id = req.session.user_id;
   // console.log(req.body)
   try {
-    const [result] = await marksService.getResult(
+    const result = await marksService.getResult(
       user_id,
       exam_term
     );

@@ -88,12 +88,15 @@ class MarksModel {
   async getResult(user_id, exam_term) {
     try {
       console.log(user_id, exam_term);
-      const [result] = await pool.query(
+      const [mark_result] = await pool.query(
         `select marks.*, exam_name, subject_name from marks inner join subject on marks.subject_id = subject.subject_id inner join exam on marks.exam_id = exam.exam_id where student_id = (select student_id from student where user_id = ?) and exam.term = ?`,
         [user_id, exam_term]
       );
-      console.log(result)
-      return [result];
+      const [user_result] = await pool.query(`select user_id, fname, mname, lname, email, dob, image, gender from user where user_id = ?`,[user_id]);
+
+      const [student_result] = await pool.query(` select student.*, class_name, section_name from student inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id where user_id = ?`,[user_id]);
+      // console.log(result)
+      return {markData : [mark_result], userData: user_result[0], studentData: student_result[0]};
     } catch (error) {
       console.log(("Error at marks model", error));
       throw error;
