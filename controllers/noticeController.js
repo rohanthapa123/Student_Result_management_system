@@ -73,7 +73,7 @@ exports.updateNotice = async (req, res) => {
   try {
     const notice_data = req.body;
     // console.log(notice_data)
-    const [result] = await noticeService.createNotice(notice_data);
+    const [result] = await noticeService.updateNotice(notice_data);
     // console.log(result);
     res.status(200).json({
       message: "Notice updated successfully",
