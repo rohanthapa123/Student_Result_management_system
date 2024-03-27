@@ -14,6 +14,19 @@ class NoticeModel {
       throw error;
     }
   }
+  async updateNotice(noticeData) {
+    try {
+      const { notice_text,  class_id , notice_id} = noticeData;
+      const [result] = await pool.query(
+        "UPDATE notice SET notice_text = ? , class_id = ? WHERE notice_id = ?",
+        [notice_text,  class_id, notice_id]
+      );
+      return [result];
+    } catch (error) {
+      console.log("Error at notice Model updating", error);
+      throw error;
+    }
+  }
   async getNoticeByClass(user_id) {
 
     try {
@@ -47,6 +60,18 @@ class NoticeModel {
       throw error;
     }
   }
+  async getNoticeById(id) {
+    try {
+      const [result] = await pool.query(
+        "SELECT notice.notice_id, notice.notice_text, notice.date_posted, notice.class_id, class.class_name from notice left join class on notice.class_id = class.class_id where notice.notice_id = ?",[id]
+      );
+      console.log(result)
+      return [result];
+    } catch (error) {
+      console.log("Error at notice Model", error);
+      throw error;
+    }
+  }
   async deleteNotice(id) {
     try {
       const [result] = await pool.query(
@@ -58,6 +83,7 @@ class NoticeModel {
       throw error;
     }
   }
+ 
 }
 
 module.exports = new NoticeModel();

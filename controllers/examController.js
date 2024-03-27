@@ -14,7 +14,7 @@ exports.createExam = async (req, res) => {
     // console.log(result);
     res
       .status(200)
-      .json({ messaga: "exam created", insertId: result.insertId });
+      .json({ message: "exam created", insertId: result.insertId });
   } catch (error) {
     console.log("error at examController", error);
     res.status(500).json({ message: "Internal server error" });

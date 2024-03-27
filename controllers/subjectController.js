@@ -41,6 +41,6 @@ exports.deleteSubjectById = async (req, res) => {
     res.status(200).json({ message: "Successfully deleted"});
   } catch (error) {
     console.log("error at subjectController", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error: error });
   }
 };

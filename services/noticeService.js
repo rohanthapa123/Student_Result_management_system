@@ -20,6 +20,16 @@ exports.getNotice = async () =>{
         throw error;
     }
 }
+exports.getNoticeById = async (id) =>{
+    try {
+        const [result] = await noticeModel.getNoticeById(id);
+        // console.log(result)
+        return [result];
+    } catch (error) {
+        console.log("Error at noticeService",error);
+        throw error;
+    }
+}
 exports.getNoticeByClass = async (user_id) =>{
     try {
         const [result] = await noticeModel.getNoticeByClass(user_id);
@@ -46,6 +56,15 @@ exports.createNotice = async (notice_data) =>{
         return [result];
     } catch (error) {
         console.log("Error at noticeService",error);
+        throw error;
+    }
+}
+exports.updateNotice = async (notice_data) =>{
+    try {
+        const [result] = await noticeModel.updateNotice(notice_data);
+        return [result];
+    } catch (error) {
+        console.log("Error at noticeService updating",error);
         throw error;
     }
 }
