@@ -15,10 +15,40 @@ exports.createSection = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+exports.updateSection = async (req, res) => {
+  try {
+    const sectionData = req.body;
+    const result = await sectionService.updateSection(sectionData);
+    res
+      .status(200)
+      .json({
+        message: "section updated successfully",
+        sectionId: result.insertId,
+      });
+  } catch (error) {
+    console.log("Error at sectionController", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 exports.getSectionByClass = async (req, res) => {
   try {
     const class_id = req.params.id;
     const [result] = await sectionService.getSectionByClass(class_id);
+    res
+      .status(200)
+      .json({
+        message: "Section got successfully",
+        data: result,
+      });
+  } catch (error) {
+    console.log("Error at sectionController", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+exports.getSectionById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [result] = await sectionService.getSectionById(id);
     res
       .status(200)
       .json({
