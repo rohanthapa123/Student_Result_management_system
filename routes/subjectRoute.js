@@ -10,7 +10,9 @@ router.post(
   subjectController.createSubject
 );
 router.get("/api/subject",loggedIn,isAdmin,subjectController.getSubjects)
-router.get("/api/subject/:id",loggedIn,isAdmin,subjectController.getSubjectByClassId)
+router.get("/api/subjectbyclass/:cid",loggedIn,isAdmin,subjectController.getSubjectByClassId);
+router.get("/api/subject/:id",loggedIn,isAdmin,subjectController.getSubjectById)
+router.patch("/api/subject/edit",loggedIn,isAdmin, subjectController.editSubject)
 router.delete("/api/subject/:id",loggedIn,isAdmin,subjectController.deleteSubjectById)
 
 module.exports = router;

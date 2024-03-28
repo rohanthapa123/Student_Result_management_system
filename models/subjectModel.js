@@ -12,6 +12,16 @@ class SubjectModel{
             throw error;
         }
     }
+    async editSubject(subject_name, subject_code, class_id, subject_id){
+        try {
+            const [result] = await pool.query('UPDATE subject SET subject_name = ? , subject_code = ? , class_id = ? WHERE subject_id = ? ',[subject_name ,subject_code, class_id, subject_id]);
+            // console.log(result)
+            return result;
+        } catch (error) {
+            console.log("error at subjectModel", error);
+            throw error;
+        }
+    }
     async getSubjects(){
         try {
             const [result] = await pool.query(' select subject.*,class_name from subject inner join class where subject.class_id = class.class_id');
@@ -25,6 +35,16 @@ class SubjectModel{
     async getSubjectByClassId(class_id){
         try {
             const [result] = await pool.query('select subject.*,class_name from subject inner join class on subject.class_id = class.class_id  where subject.class_id = ?',[class_id]);
+            // console.log(result)
+            return [result];
+        } catch (error) {
+            console.log("error at subjectModel", error);
+            throw error;
+        }
+    }
+    async getSubjectById(id){
+        try {
+            const [result] = await pool.query('select subject.*,class_name from subject inner join class on subject.class_id = class.class_id  where subject.subject_id= ?',[id]);
             // console.log(result)
             return [result];
         } catch (error) {

@@ -12,9 +12,29 @@ class ClassModel{
             throw error;
         }
     }
+    async editClass(class_name, _class, class_id){
+        try {
+            const [result] = await pool.query('UPDATE class SET class_name = ? , class = ? WHERE class_id = ? ',[class_name ,_class , class_id]);
+            // console.log(result)
+            return result;
+        } catch (error) {
+            console.log("error at classModel", error);
+            throw error;
+        }
+    }
     async getClass(){
         try {
             const [result] = await pool.query('SELECT * FROM class');
+            // console.log(result)
+            return [result];
+        } catch (error) {
+            console.log("error at classModel", error);
+            throw error;
+        }
+    }
+    async getClassById(id){
+        try {
+            const [result] = await pool.query('SELECT * FROM class WHERE class_id = ?',[id]);
             // console.log(result)
             return [result];
         } catch (error) {

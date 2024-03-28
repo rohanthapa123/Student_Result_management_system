@@ -9,6 +9,15 @@ exports.createSubject = async (subject_name, subject_code, class_id) =>{
         throw error;
     }
 }
+exports.editSubject = async (subject_name, subject_code, class_id, subject_id) =>{
+    try {
+        const result = await subjectModel.editSubject(subject_name, subject_code,class_id, subject_id);
+        return result
+    } catch (error) {
+        console.log("Error at subjectService", error)
+        throw error;
+    }
+}
 exports.getSubjects = async () =>{
     try {
         const [result] = await subjectModel.getSubjects();
@@ -21,6 +30,15 @@ exports.getSubjects = async () =>{
 exports.getSubjectByClassId = async (class_id) =>{
     try {
         const [result] = await subjectModel.getSubjectByClassId(class_id);
+        return [result]
+    } catch (error) {
+        console.log("Error at subjectService", error)
+        throw error;
+    }
+}
+exports.getSubjectById = async (id) =>{
+    try {
+        const [result] = await subjectModel.getSubjectById(id);
         return [result]
     } catch (error) {
         console.log("Error at subjectService", error)

@@ -9,6 +9,15 @@ exports.createExam = async (exam_name,class_id, subject_id,exam_date, term) =>{
         throw error;
     }
 }
+exports.updateExam = async (exam_name,class_id, subject_id,exam_date, term , exam_id) =>{
+    try {
+        const result = await examModel.updateExam(exam_name,class_id, subject_id,exam_date, term , exam_id);
+        return result
+    } catch (error) {
+        console.log("Error at examService", error)
+        throw error;
+    }
+}
 exports.getExams = async () =>{
     try {
         const [result] = await examModel.getExams();
@@ -21,6 +30,15 @@ exports.getExams = async () =>{
 exports.getExamByClassId = async (class_id) =>{
     try {
         const [result] = await examModel.getExamByClassId(class_id);
+        return [result]
+    } catch (error) {
+        console.log("Error at examService", error)
+        throw error;
+    }
+}
+exports.getExamById = async (id) =>{
+    try {
+        const [result] = await examModel.getExamById(id);
         return [result]
     } catch (error) {
         console.log("Error at examService", error)
