@@ -30,6 +30,15 @@ exports.registerUser = async (userData) => {
     throw error;
   }
 };
+exports.updateUser = async (userData) => {
+  try {
+    const newUser = await userModel.updateUser(userData);
+    return newUser;
+  } catch (error) {
+    console.log("error in userService", error);
+    throw error;
+  }
+};
 
 exports.deleteById = async (user_id) => {
   try {

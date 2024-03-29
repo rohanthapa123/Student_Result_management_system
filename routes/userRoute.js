@@ -7,12 +7,14 @@ const {
   getOwnDetail,
   changeProfilePicture,
   getUserCount,
+  updateUser,
 } = require("../controllers/userController");
 const { loggedIn, isAdmin } = require("../middleware/auth.middleware");
 const upload = require("../middleware/multer.middleware");
 
 const router = express.Router();
 router.post("/api/register", loggedIn, isAdmin, register);
+router.patch("/api/update", loggedIn, isAdmin, updateUser);
 router.post(
   "/api/changeprofile",
   loggedIn,

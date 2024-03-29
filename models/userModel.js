@@ -33,28 +33,64 @@ class UserModel {
 
       // console.log(image_result);
       const [result] = await connection.query(
-        `INSERT INTO user ( fname, mname, lname, dob, email, password, role, gender) Values (?,?, ?, ?, ?,?,?,?)`,
-        [fname, mname, lname, dob, email, password, role, gender]
+        `INSERT INTO user ( fname, mname, lname, dob, email password,primary_contact, secondary_contact, permanent_address, temporary_address, role, gender) Values (?,?, ?, ?, ?,?,?,?,?,?,?,?)`,
+        [
+          fname,
+          mname,
+          lname,
+          dob,
+          email,
+          password,
+          primaryContact,
+          secondaryContact,
+          perm_address,
+          temp_address,
+          role,
+          gender,
+        ]
       );
-      const user_id = result.insertId;
-      await connection.query(
-        "INSERT INTO user_contact (user_id, contact) VALUES (?,?)",
-        [user_id, primaryContact]
-      );
-      if (secondaryContact) {
-        await connection.query(
-          "INSERT INTO user_contact (user_id, contact) VALUES (?,?)",
-          [user_id, secondaryContact]
-        );
-      }
 
-      await connection.query(
-        "INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)",
-        [user_id, temp_address, "temporary"]
-      );
-      await connection.query(
-        "INSERT INTO user_address (user_id, address, address_type) VALUES (?,?,?)",
-        [user_id, perm_address, "permanent"]
+      await connection.commit();
+      return result;
+    } catch (error) {
+      console.log("error in userModel", error);
+      throw error;
+    }
+  }
+  async updateUser(userData) {
+    // console.log(userData);
+    let connection;
+    const {
+      fname,
+      mname,
+      lname,
+      dob,
+      gender,
+      primaryContact,
+      secondaryContact,
+      temp_address,
+      perm_address,
+      user_id
+    } = userData;
+    try {
+      connection = await pool.getConnection();
+      await connection.beginTransaction();
+
+      // console.log(image_result);
+      const [result] = await connection.query(
+        `UPDATE user SET  fname = ? , mname = ? , lname = ? , dob = ?,permanent_address = ? , temporary_address = ?, primary_contact = ?, secondary_contact = ? ,  gender = ? WHERE user_id = ? `,
+        [
+          fname,
+          mname,
+          lname,
+          dob,
+          perm_address,
+          temp_address,
+          primaryContact,
+          secondaryContact,
+          gender,
+          user_id,
+        ]
       );
       await connection.commit();
       return result;
@@ -75,15 +111,10 @@ class UserModel {
                   user.email,
                   user.dob,
                   user.image,
-      GROUP_CONCAT(DISTINCT user_contact.contact ORDER BY user_contact.user_id) as contacts,
-      MAX(CASE WHEN user_address.address_type = 'temporary' THEN user_address.address END) as temp_address,
-      MAX(CASE WHEN user_address.address_type = 'permanent' THEN user_address.address END) as permanent_address
-  FROM 
-      user 
-      LEFT JOIN user_address ON user.user_id = user_address.user_id 
-      LEFT JOIN user_contact ON user.user_id = user_contact.user_id
-  GROUP BY 
-      user.user_id;
+                  user.temporary_address,
+                  user.permanent_address,
+                  user.primary_contact,
+                  user.secondary_contact
         `);
 
       return [rows];
@@ -162,16 +193,11 @@ class UserModel {
                     user.dob,
                     user.image,
                     user.gender,
-        GROUP_CONCAT(DISTINCT user_contact.contact ORDER BY user_contact.user_id) as contacts,
-        MAX(CASE WHEN user_address.address_type = 'temporary' THEN user_address.address END) as temp_address,
-        MAX(CASE WHEN user_address.address_type = 'permanent' THEN user_address.address END) as permanent_address
-    FROM 
-        user 
-        LEFT JOIN user_address ON user.user_id = user_address.user_id 
-        LEFT JOIN user_contact ON user.user_id = user_contact.user_id
-        WHERE user.user_id = ?
-    GROUP BY 
-        user.user_id `,
+                    user.temporary_address,
+                    user.permanent_address,
+                    user.primary_contact,
+                    user.secondary_contact 
+        WHERE user.user_id = ? `,
         [user_id]
       );
       return [result];

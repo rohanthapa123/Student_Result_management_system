@@ -1,6 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 
+const fileSizeLimit = 2 * 1024 * 1024; // 2 MB
 const imageFilter = (req, file, cb) => {
   const allowedImageTypes = [
     "image/jpeg",
@@ -9,13 +10,15 @@ const imageFilter = (req, file, cb) => {
     "image/webp",
     "image/jpg",
   ];
-  if (allowedImageTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Invalid File type. Only Images of jpg/jpeg,png,gif,webp"));
+  if (!allowedImageTypes.includes(file.mimetype)) {
+    return cb(new Error("Invalid File type. Only Images of jpg/jpeg,png,gif,webp"));
   }
+  if (file.size > fileSizeLimit) {
+     return cb(new Error("File size exceeds the limit. Maximum allowed size is 2MB.")
+    );
+  }
+  cb(null, true);
 };
-const fileSizeLimit = 2 * 1024 * 1024; // 2 MB
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -24,7 +27,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     // console.log(file);
     const originalName = file.originalname.split(".");
-    const filename = `${originalName[0]}_${Date.now()}.${originalName[1]}`
+    const filename = `${originalName[0]}_${Date.now()}.${originalName[1]}`;
     cb(null, filename);
   },
 });
