@@ -50,7 +50,7 @@ exports.updateUser = async (req, res) => {
 
   try {
     const userData = req.body;
-    console.log(userData)
+    console.log(userData);
     const { subject_id } = req.body;
     // console.log(imageBuffer);
     const { class_id, section_id, blood_group, nationality } = req.body;
@@ -62,7 +62,7 @@ exports.updateUser = async (req, res) => {
         break;
       case "student":
         await studentService.updateStudentData(
-          result.insertId,
+          req.body.student_id,
           class_id,
           section_id,
           blood_group,
@@ -107,14 +107,18 @@ exports.getUserCount = async (req, res, next) => {
   }
 };
 
-
-
 exports.deleteUserById = async (req, res, next) => {
   try {
     // console.log(req.params.id);
     const user_id = req.params.id;
-    await userService.deleteById(user_id);
-    res.status(200).json({ message: "Delete Success" });
+    console.log("my user_id is ", req.session.user_id);
+    console.log(req.session.user_id && req.session.role);
+    if (req.session.user_id == user_id) {
+      res.status(403).json({ message: "Cannot delete yourself", code: "1434" });
+    } else {
+      await userService.deleteById(user_id);
+      res.status(200).json({ message: "Delete Success" });
+    }
   } catch (error) {
     if (error.status && error.message) {
       res.status(error.status).json({ error: error.message });

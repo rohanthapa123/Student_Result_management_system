@@ -22,10 +22,10 @@ class UserModel {
       password,
       role,
       gender,
-      primaryContact,
-      secondaryContact,
-      temp_address,
-      perm_address,
+      primary_contact,
+      secondary_contact,
+      temporary_address,
+      permanent_address,
     } = userData;
     try {
       connection = await pool.getConnection();
@@ -33,7 +33,7 @@ class UserModel {
 
       // console.log(image_result);
       const [result] = await connection.query(
-        `INSERT INTO user ( fname, mname, lname, dob, email password,primary_contact, secondary_contact, permanent_address, temporary_address, role, gender) Values (?,?, ?, ?, ?,?,?,?,?,?,?,?)`,
+        `INSERT INTO user ( fname, mname, lname, dob, email, password,primary_contact, secondary_contact, permanent_address, temporary_address, role, gender) Values (?,?, ?, ?, ?,?,?,?,?,?,?,?)`,
         [
           fname,
           mname,
@@ -41,10 +41,10 @@ class UserModel {
           dob,
           email,
           password,
-          primaryContact,
-          secondaryContact,
-          perm_address,
-          temp_address,
+          primary_contact,
+          secondary_contact,
+          permanent_address,
+          temporary_address,
           role,
           gender,
         ]
@@ -66,11 +66,11 @@ class UserModel {
       lname,
       dob,
       gender,
-      primaryContact,
-      secondaryContact,
-      temp_address,
-      perm_address,
-      user_id
+      primary_contact,
+      secondary_contact,
+      temporary_address,
+      permanent_address,
+      user_id,
     } = userData;
     try {
       connection = await pool.getConnection();
@@ -84,10 +84,10 @@ class UserModel {
           mname,
           lname,
           dob,
-          perm_address,
-          temp_address,
-          primaryContact,
-          secondaryContact,
+          permanent_address,
+          temporary_address,
+          primary_contact,
+          secondary_contact,
           gender,
           user_id,
         ]
@@ -184,20 +184,21 @@ class UserModel {
     try {
       const [result] = await pool.query(
         `SELECT
-        user.user_id,
-                    user.fname,
-                    user.mname,
-                    user.lname,
-                    user.role,
-                    user.email,
-                    user.dob,
-                    user.image,
-                    user.gender,
-                    user.temporary_address,
-                    user.permanent_address,
-                    user.primary_contact,
-                    user.secondary_contact 
-        WHERE user.user_id = ? `,
+        user_id,
+                    fname,
+                    mname,
+                    lname,
+                    role,
+                    email,
+                    dob,
+                    image,
+                    gender,
+                    temporary_address,
+                    permanent_address,
+                    primary_contact,
+                    secondary_contact 
+                    FROM user
+        WHERE user_id = ? `,
         [user_id]
       );
       return [result];

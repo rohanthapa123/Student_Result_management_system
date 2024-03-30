@@ -16,7 +16,7 @@ class TeacherModel {
     try {
       let [result] = await pool.query(
         "UPDATE teacher SET  subject_id = ?  WHERE user_id = ?",
-        [user_id, subject_id]
+        [subject_id, user_id]
       );
       return [result];
     } catch (error) {

@@ -83,12 +83,8 @@ exports.getUserById = async (id) => {
 exports.getOwnData = async (id) => {
   try {
     const [results] = await userModel.getOwnData(id);
-    const contactsArray = results[0].contacts ? results[0].contacts.split(",") : [];
-    const mixedResult = {
-      ...results[0],
-      contacts: contactsArray
-    }
-    return [mixedResult];
+  
+    return [results[0]];
   } catch (error) {
     console.log("error at user service", error);
     throw error;
