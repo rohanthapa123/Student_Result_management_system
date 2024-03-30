@@ -11,7 +11,7 @@ exports.register = async (req, res) => {
     const userData = req.body;
     const { subject_id } = req.body;
     // console.log(imageBuffer);
-    const { class_id, section_id, blood_group, nationality } = req.body;
+    const { class_id, section_id, roll_no, blood_group, nationality } = req.body;
     // console.log("userData",userData)
     const result = await userService.registerUser(userData);
     switch (userData.role) {
@@ -23,6 +23,7 @@ exports.register = async (req, res) => {
           result.insertId,
           class_id,
           section_id,
+          roll_no,
           blood_group,
           nationality
         );
@@ -53,7 +54,7 @@ exports.updateUser = async (req, res) => {
     console.log(userData);
     const { subject_id } = req.body;
     // console.log(imageBuffer);
-    const { class_id, section_id, blood_group, nationality } = req.body;
+    const { class_id, section_id, roll_no, blood_group, nationality } = req.body;
     // console.log("userData",userData)
     const result = await userService.updateUser(userData);
     switch (userData.role) {
@@ -64,6 +65,7 @@ exports.updateUser = async (req, res) => {
           req.body.student_id,
           class_id,
           section_id,
+          roll_no,
           blood_group,
           nationality
         );
