@@ -58,7 +58,6 @@ exports.updateUser = async (req, res) => {
     const result = await userService.updateUser(userData);
     switch (userData.role) {
       case "admin":
-        await adminService.updateAdminData(result.insertId);
         break;
       case "student":
         await studentService.updateStudentData(
