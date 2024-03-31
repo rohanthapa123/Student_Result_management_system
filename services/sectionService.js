@@ -27,6 +27,15 @@ exports.getSectionByClass = async (class_id) => {
     throw error;
   }
 };
+exports.getSections = async (id, limit, offset) => {
+  try {
+    const result = await sectionModel.getSections(id , limit, offset);
+    return result;
+  } catch (error) {
+    console.log("error at sectionService", error);
+    throw error;
+  }
+};
 exports.getSectionById = async (id) => {
   try {
     const [result] = await sectionModel.getSectionById(id);
