@@ -27,21 +27,28 @@ class SubjectModel {
       throw error;
     }
   }
-  async getSubjects(id) {
+  async getSubjects(id, limit, offset) {
     try {
       if (id) {
         const [result] = await pool.query(
-          "select subject.*,class_name from subject inner join class on subject.class_id = class.class_id  where subject.class_id= ?",
+          `select subject.*,class_name from subject inner join class on subject.class_id = class.class_id  where subject.class_id= ? limit ${limit} offset ${offset}`,
+          [id]
+        );
+        const [count] = await pool.query(
+          "select Count(subject_id) as total from subject where subject.class_id = ?",
           [id]
         );
         // console.log(result)
-        return [result];
+        return { result: [result], pages: count };
       } else {
         const [result] = await pool.query(
-          " select subject.*,class_name from subject inner join class where subject.class_id = class.class_id"
+          `select subject.*,class_name from subject inner join class where subject.class_id = class.class_id limit ${limit} offset ${offset}`
+        );
+        const [count] = await pool.query(
+          "select Count(subject_id) as total from subject"
         );
         // console.log(result)
-        return [result];
+        return { result: [result], pages: count };
       }
     } catch (error) {
       console.log("error at subjectModel", error);

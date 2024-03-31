@@ -26,10 +26,14 @@ exports.editSubject = async (req, res) => {
 };
 exports.getSubjects = async (req, res) => {
   try {
-    const {class_id : id} = req.query;
-    const [result] = await subjectService.getSubjects(id);
+    const {class_id : id , limit, offset} = req.query;
+    const result = await subjectService.getSubjects(id , limit , offset);
+    console.log(result.pages[0].total);
+    console.log(result)
+    console.log("Total Page", Math.ceil(result.pages[0].total / limit))
+    const totalPage = Math.ceil(result.pages[0].total / limit);
     // console.log(result);
-    res.status(200).json({ data: result});
+    res.status(200).json({ result: result.result[0] , totalPage: totalPage});
   } catch (error) {
     console.log("error at subjectController", error);
     res.status(500).json({ message: "Internal server error" });
