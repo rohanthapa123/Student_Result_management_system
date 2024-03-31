@@ -50,7 +50,7 @@ class SectionModel {
           [id]
         );
         const [count] = await pool.query(
-          "select Count(section_id) as total from section"
+          "select Count(section_id) as total from section where class_id = ?",[id]
         );
         // console.log([count]);
         return { result: [result], pages: count };

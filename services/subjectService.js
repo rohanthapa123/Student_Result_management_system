@@ -18,9 +18,9 @@ exports.editSubject = async (subject_name, subject_code, class_id, subject_id) =
         throw error;
     }
 }
-exports.getSubjects = async () =>{
+exports.getSubjects = async (id) =>{
     try {
-        const [result] = await subjectModel.getSubjects();
+        const [result] = await subjectModel.getSubjects(id);
         return [result]
     } catch (error) {
         console.log("Error at subjectService", error)

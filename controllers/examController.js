@@ -43,6 +43,7 @@ exports.updateExam = async (req, res) => {
 };
 exports.getExams = async (req, res) => {
   try {
+    const {id : class_id} = req.query;
     const [result] = await examService.getExams();
     // console.log(result);
     res.status(200).json({ data: result });

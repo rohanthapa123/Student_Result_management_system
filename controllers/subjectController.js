@@ -26,7 +26,8 @@ exports.editSubject = async (req, res) => {
 };
 exports.getSubjects = async (req, res) => {
   try {
-    const [result] = await subjectService.getSubjects();
+    const {class_id : id} = req.query;
+    const [result] = await subjectService.getSubjects(id);
     // console.log(result);
     res.status(200).json({ data: result});
   } catch (error) {
