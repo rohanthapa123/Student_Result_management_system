@@ -26,6 +26,12 @@ class UserModel {
       secondary_contact,
       temporary_address,
       permanent_address,
+      class_id,
+      section_id,
+      roll_no,
+      blood_group,
+      nationality,
+      subjects,
     } = userData;
     try {
       connection = await pool.getConnection();
@@ -49,12 +55,60 @@ class UserModel {
           gender,
         ]
       );
+      console.log(role);
+
+      switch (role) {
+        case "admin":
+          await connection.query("INSERT INTO admin (user_id) VALUES (?)", [
+            result.insertId,
+          ]);
+          // await adminService.insertAdminData(result.insertId);
+          break;
+        case "student":
+          const admission_id =
+            result.insertId + "_" + class_id + "_" + section_id;
+          await connection.query(
+            "INSERT INTO student (user_id,class_id,section_id,roll_no,admission_id,blood_group,nationality) VALUES (?,?,?,?,?,?,?)",
+            [
+              result.insertId,
+              class_id,
+              section_id,
+              roll_no,
+              admission_id,
+              blood_group,
+              nationality,
+            ]
+          );
+          break;
+        case "teacher":
+          console.log(subjects);
+
+          // await teacherService.insertTeacherData(result.insertId, subjects);
+          const [teacherresult] = await connection.query("INSERT INTO teacher (user_id) VALUES (?)", [
+            result.insertId,
+          ]);
+          subjects.forEach(async item => {
+            await connection.query("INSERT INTO teacher_subject_map (teacher_id , subject_id) VALUES (?,?)",[ teacherresult.insertId , item.value])
+          });
+          break;
+        default:
+          const error = new Error("Role undefined");
+          error.status(402);
+          throw error;
+      }
 
       await connection.commit();
       return result;
     } catch (error) {
       console.log("error in userModel", error);
+      if (connection) {
+        await connection.rollback();
+      }
       throw error;
+    } finally {
+      if (connection) {
+        connection.release();
+      }
     }
   }
   async updateUser(userData) {
@@ -71,6 +125,14 @@ class UserModel {
       temporary_address,
       permanent_address,
       user_id,
+      class_id,
+      section_id,
+      roll_no,
+      blood_group,
+      nationality,
+      student_id,
+      subjects,
+      teacher_id
     } = userData;
     try {
       connection = await pool.getConnection();
@@ -92,11 +154,53 @@ class UserModel {
           user_id,
         ]
       );
+      switch (userData.role) {
+        case "admin":
+          break;
+        case "student":
+          await pool.query(
+            "UPDATE student SET class_id = ? ,section_id = ? , roll_no = ?,blood_group = ? ,nationality = ? WHERE student_id = ?",
+            [
+              class_id,
+              section_id,
+              roll_no,
+              blood_group,
+              nationality,
+              student_id,
+            ]
+          );
+          break;
+        case "teacher":
+          console.log(subjects);
+          await connection.query(
+            `delete from teacher_subject_map where teacher_id = ? `,
+            [teacher_id]
+          );
+          subjects.forEach(async (element) => {
+            await connection.query(
+              `INSERT INTO teacher_subject_map (teacher_id , subject_id) values (? , ?)`,
+              [teacher_id, element.value]
+            );
+          });
+          // await teacherService.updateTeacherData(req.body.user_id, subject_id);
+          break;
+        default:
+          const error = new Error("Role undefined");
+          error.status(402);
+          throw error;
+      }
       await connection.commit();
       return result;
     } catch (error) {
       console.log("error in userModel", error);
+      if (connection) {
+        await connection.rollback();
+      }
       throw error;
+    } finally {
+      if (connection) {
+        connection.release();
+      }
     }
   }
   async getUsers() {

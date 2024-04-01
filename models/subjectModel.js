@@ -1,11 +1,11 @@
 const { pool } = require("../config/database");
 
 class SubjectModel {
-  async createSubject(subject_name, subject_code, class_id) {
+  async createSubject(subject_name, subject_code , desc) {
     try {
       const [result] = await pool.query(
-        "INSERT INTO subject (subject_name, subject_code, class_id) VALUES (? ,?, ?)",
-        [subject_name, subject_code, class_id]
+        "INSERT INTO subject (subject_name, subject_code , `desc`) VALUES (? ,? , ?)",
+        [subject_name, subject_code  , desc]
       );
       // console.log(result)
       return result;
@@ -14,11 +14,11 @@ class SubjectModel {
       throw error;
     }
   }
-  async editSubject(subject_name, subject_code, class_id, subject_id) {
+  async editSubject(subject_name, subject_code,desc,  subject_id) {
     try {
       const [result] = await pool.query(
-        "UPDATE subject SET subject_name = ? , subject_code = ? , class_id = ? WHERE subject_id = ? ",
-        [subject_name, subject_code, class_id, subject_id]
+        "UPDATE subject SET subject_name = ? , subject_code = ? , `desc` = ?  WHERE subject_id = ? ",
+        [subject_name, subject_code,desc,  subject_id]
       );
       // console.log(result)
       return result;
@@ -31,8 +31,9 @@ class SubjectModel {
     try {
       if (id) {
         const [result] = await pool.query(
-          `select subject.*,class_name from subject inner join class on subject.class_id = class.class_id  where subject.class_id= ? limit ${limit} offset ${offset}`,
-          [id]
+          // `select subject.*,class_name from subject inner join class on subject.class_id = class.class_id  where subject.class_id= ? limit ${limit} offset ${offset}`,
+          // [id]
+          `select * from subject`
         );
         const [count] = await pool.query(
           "select Count(subject_id) as total from subject where subject.class_id = ?",
@@ -42,7 +43,7 @@ class SubjectModel {
         return { result: [result], pages: count };
       } else {
         const [result] = await pool.query(
-          `select subject.*,class_name from subject inner join class where subject.class_id = class.class_id limit ${limit} offset ${offset}`
+          `select subject.* from subject limit ${limit} offset ${offset}`
         );
         const [count] = await pool.query(
           "select Count(subject_id) as total from subject"
@@ -71,7 +72,7 @@ class SubjectModel {
   async getSubjectById(id) {
     try {
       const [result] = await pool.query(
-        "select subject.*,class_name from subject inner join class on subject.class_id = class.class_id  where subject.subject_id= ?",
+        "select subject.* from subject  where subject.subject_id= ?",
         [id]
       );
       // console.log(result)

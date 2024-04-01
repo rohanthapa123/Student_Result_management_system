@@ -1,7 +1,9 @@
 const teacherModel = require('../models/teacherModel')
-exports.insertTeacherData = async (user_id, subject_id) =>{
+exports.insertTeacherData = async (user_id, subject) =>{
     try {
-        const [result] = await teacherModel.insertTeacherData(user_id, subject_id);
+        const [result] = await teacherModel.insertTeacherData(user_id);
+        console.log(result.insertId)
+        console.log(subject)
         return result;
     } catch (error) {
         console.log("error in teacherService",error);

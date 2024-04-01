@@ -1,11 +1,11 @@
 const subjectModel = require("../models/subjectModel");
 
-exports.createSubject = async (subject_name, subject_code, class_id) => {
+exports.createSubject = async (subject_name, subject_code, desc) => {
   try {
     const result = await subjectModel.createSubject(
       subject_name,
       subject_code,
-      class_id
+      desc
     );
     return result;
   } catch (error) {
@@ -16,14 +16,14 @@ exports.createSubject = async (subject_name, subject_code, class_id) => {
 exports.editSubject = async (
   subject_name,
   subject_code,
-  class_id,
+  desc,
   subject_id
 ) => {
   try {
     const result = await subjectModel.editSubject(
       subject_name,
       subject_code,
-      class_id,
+      desc,
       subject_id
     );
     return result;

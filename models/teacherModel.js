@@ -14,10 +14,10 @@ class TeacherModel {
   }
   async updateTeacherData(user_id, subject_id) {
     try {
-      let [result] = await pool.query(
-        "UPDATE teacher SET  subject_id = ?  WHERE user_id = ?",
-        [subject_id, user_id]
-      );
+      let [result] = await pool.query("UPDATE teacher   WHERE user_id = ?", [
+        subject_id,
+        user_id,
+      ]);
       return [result];
     } catch (error) {
       console.log("error at teacherModel", error);
@@ -27,7 +27,7 @@ class TeacherModel {
   async getAllTeacher() {
     try {
       let [result] = await pool.query(
-        " select teacher.user_id, fname, mname, lname, role, email, dob,image,teacher.subject_id,subject_name,teacher_id from user inner join teacher on user.user_id = teacher.user_id inner join subject on teacher.subject_id = subject.subject_id"
+        " select teacher.user_id, fname, mname, lname, role, email, dob,image,teacher_id from user inner join teacher on user.user_id = teacher.user_id"
       );
       return [result];
     } catch (error) {
@@ -38,8 +38,46 @@ class TeacherModel {
   async getTeacherById(id) {
     try {
       let [result] = await pool.query(
-        `select user.user_id , fname, mname, lname, role, email, dob, image, gender, primary_contact, secondary_contact, permanent_address, temporary_address ,teacher_id, subject_id from teacher inner join user on teacher.user_id = user.user_id where teacher.teacher_id = ?
-    `,[id]
+        `SELECT 
+        u.user_id,
+        u.fname,
+        u.mname,
+        u.lname,
+        u.role,
+        u.email,
+        u.dob,
+        u.image,
+        u.gender,
+        u.primary_contact,
+        u.secondary_contact,
+        u.permanent_address,
+        u.temporary_address,
+        t.teacher_id,
+        IFNULL(
+            JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'value', s.subject_id,
+                    'label', s.subject_name
+                )
+            ),
+            JSON_ARRAY()
+        ) AS subjects
+    FROM 
+        teacher t
+    INNER JOIN 
+        user u ON t.user_id = u.user_id
+    LEFT JOIN 
+        teacher_subject_map tsm ON t.teacher_id = tsm.teacher_id
+    LEFT JOIN 
+        subject s ON tsm.subject_id = s.subject_id
+    WHERE 
+        t.teacher_id = ?
+    GROUP BY 
+        u.user_id, u.fname, u.mname, u.lname, u.role, u.email, u.dob, u.image, u.gender, u.primary_contact, u.secondary_contact, u.permanent_address, u.temporary_address, t.teacher_id;
+    
+    
+    `,
+        [id]
       );
       return [result];
     } catch (error) {

@@ -9,33 +9,9 @@ exports.register = async (req, res) => {
 
   try {
     const userData = req.body;
-    const { subject_id } = req.body;
-    // console.log(imageBuffer);
-    const { class_id, section_id, roll_no, blood_group, nationality } = req.body;
     // console.log("userData",userData)
     const result = await userService.registerUser(userData);
-    switch (userData.role) {
-      case "admin":
-        await adminService.insertAdminData(result.insertId);
-        break;
-      case "student":
-        await studentService.insertStudentData(
-          result.insertId,
-          class_id,
-          section_id,
-          roll_no,
-          blood_group,
-          nationality
-        );
-        break;
-      case "teacher":
-        await teacherService.insertTeacherData(result.insertId, subject_id);
-        break;
-      default:
-        const error = new Error("Role undefined");
-        error.status(402);
-        throw error;
-    }
+
     return res.json({ message: "Done", insertId: result.insertId });
   } catch (error) {
     if (error.status && error.message) {
@@ -52,32 +28,10 @@ exports.updateUser = async (req, res) => {
   try {
     const userData = req.body;
     console.log(userData);
-    const { subject_id } = req.body;
-    // console.log(imageBuffer);
-    const { class_id, section_id, roll_no, blood_group, nationality } = req.body;
+    
     // console.log("userData",userData)
     const result = await userService.updateUser(userData);
-    switch (userData.role) {
-      case "admin":
-        break;
-      case "student":
-        await studentService.updateStudentData(
-          req.body.student_id,
-          class_id,
-          section_id,
-          roll_no,
-          blood_group,
-          nationality
-        );
-        break;
-      case "teacher":
-        await teacherService.updateTeacherData(req.body.user_id, subject_id);
-        break;
-      default:
-        const error = new Error("Role undefined");
-        error.status(402);
-        throw error;
-    }
+    
     return res.json({ message: "Done", insertId: result.insertId });
   } catch (error) {
     if (error.status && error.message) {

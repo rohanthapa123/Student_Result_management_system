@@ -20,6 +20,7 @@ exports.registerUser = async (userData) => {
     const password = generatePassword();
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);
+    
     const user = { ...userData, password: hashedPassword };
     const newUser = await userModel.createUser(user);
     console.log(password);
