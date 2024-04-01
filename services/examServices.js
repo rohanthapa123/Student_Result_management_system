@@ -45,9 +45,9 @@ exports.getExamById = async (id) =>{
         throw error;
     }
 }
-exports.getExamOfTeacherClass = async (user_id) =>{
+exports.getExamOfTeacherClass = async (user_id , class_id) =>{
     try {
-        const [result] = await examModel.getExamOfTeacherClass(user_id);
+        const [result] = await examModel.getExamOfTeacherClass(user_id , class_id);
         return [result]
     } catch (error) {
         console.log("Error at examService", error)

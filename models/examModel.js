@@ -71,13 +71,47 @@ class ExamModel {
       throw error;
     }
   }
-  async getExamOfTeacherClass(user_id) {
+  async getExamOfTeacherClass(user_id, class_id) {
     try {
-      const [result] = await pool.query(
-        "  SELECT exam.*, class_name, subject_name from exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id where exam.class_id = (select subject.class_id from teacher inner join subject on teacher.subject_id = subject.subject_id where teacher_id = (select teacher_id from user inner join teacher on user.user_id = teacher.user_id where user.user_id = ?)); ",
-        [user_id]
-      );
-      return [result];
+      if (class_id) {
+        const [result] = await pool.query(
+          ` SELECT exam.* , class_name ,subject_name
+        FROM exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id 
+        WHERE exam.subject_id IN (
+          SELECT subject_id
+            FROM teacher_subject_map
+            WHERE teacher_id IN (
+              SELECT teacher_id
+                FROM user
+                INNER JOIN teacher ON user.user_id = teacher.user_id
+                WHERE user.user_id = ?
+                )
+                ) and exam.class_id = ?
+                
+                `,
+          [user_id, class_id]
+        );
+        return [result];
+      } else {
+        const [result] = await pool.query(
+          ` SELECT exam.* , class_name ,subject_name
+        FROM exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id 
+        WHERE exam.subject_id IN (
+          SELECT subject_id
+            FROM teacher_subject_map
+            WHERE teacher_id IN (
+              SELECT teacher_id
+                FROM user
+                INNER JOIN teacher ON user.user_id = teacher.user_id
+                WHERE user.user_id = 184
+                )
+                );
+                
+                `,
+          [user_id]
+        );
+        return [result];
+      }
     } catch (error) {
       console.log("Error at exam model", error);
       throw error;
