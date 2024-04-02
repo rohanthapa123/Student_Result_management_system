@@ -29,6 +29,15 @@ exports.getMarksByClass = async (class_id, exam_id) => {
     throw error;
   }
 };
+exports.getAllMarksByClass = async (class_id, term) => {
+  try {
+    const [result] = await MarksModel.getAllMarksByClass(class_id, term);
+    return [result];
+  } catch (error) {
+    console.log("Error at marksService", error);
+    throw error;
+  }
+};
 exports.deleteMarksById = async (marks_id) => {
   try {
     const [result] = await MarksModel.deleteMarkById(marks_id);

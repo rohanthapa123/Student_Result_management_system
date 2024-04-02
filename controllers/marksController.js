@@ -6,29 +6,22 @@ exports.insertMark = async (req, res) => {
     //   req.body;
     const marks = req.body;
     // console.log(req.body);
-    const result = await marksService.insertMark(
-      marks
-    );
+    const result = await marksService.insertMark(marks);
     console.log(result);
-    res
-      .status(200)
-      .json({ messaga: "marks inserted" });
+    res.status(200).json({ messaga: "marks inserted" });
   } catch (error) {
     console.log("error at markController", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 exports.getResult = async (req, res) => {
-  const  exam_term  = req.params.term;
-  console.log(req.params)
-  console.log(exam_term)
+  const exam_term = req.params.term;
+  console.log(req.params);
+  console.log(exam_term);
   const user_id = req.session.user_id;
   // console.log(req.body)
   try {
-    const result = await marksService.getResult(
-      user_id,
-      exam_term
-    );
+    const result = await marksService.getResult(user_id, exam_term);
     // console.log(result);
     res.status(200).json({ data: result });
   } catch (error) {
@@ -44,6 +37,21 @@ exports.getMarksByClass = async (req, res) => {
   console.log(req.query.class_id);
   try {
     const [result] = await marksService.getMarksByClass(class_id, exam_id);
+    // console.log(result);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.log("error at markController", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+exports.getAllMarksByClass = async (req, res) => {
+  const term = req.query.term;
+  const class_id = req.query.class_id;
+  // console.log(req.params.id)
+  console.log(req.query.term);
+  console.log(req.query.class_id);
+  try {
+    const [result] = await marksService.getAllMarksByClass(class_id, term);
     // console.log(result);
     res.status(200).json({ data: result });
   } catch (error) {

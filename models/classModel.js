@@ -96,6 +96,23 @@ class ClassModel {
       throw error;
     }
   }
+  async getClassByUserIdForTeacher(user_id) {
+    try {
+      console.log("user_id is ", user_id);
+      const [result] = await pool.query(
+        `select distinct class_subject_map.class_id, class_name from class_subject_map inner join class on class_subject_map.class_id = class.class_id where subject_id in (select subject_id from teacher_subject_map where teacher_id in (select teacher.teacher_id from user inner join teacher on
+          user.user_id = teacher.user_id where user.user_id = ?))
+ 
+         `,
+        [user_id]
+      );
+      console.log(result);
+      return [result];
+    } catch (error) {
+      console.log("error at classModel", error);
+      throw error;
+    }
+  }
   async deleteClassByID(class_id) {
     try {
       const [result] = await pool.query(

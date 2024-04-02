@@ -36,6 +36,15 @@ exports.getClassById = async (id) =>{
         throw error;
     }
 }
+exports.getClassByUserIdForTeacher = async (user_id) =>{
+    try {
+        const [result] = await classModel.getClassByUserIdForTeacher(user_id);
+        return [result]
+    } catch (error) {
+        console.log("Error at classService", error)
+        throw error;
+    }
+}
 exports.deleteClassByID = async (class_id) =>{
     try {
         const [result] = await classModel.deleteClassByID(class_id);

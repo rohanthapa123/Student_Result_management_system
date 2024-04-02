@@ -5,6 +5,7 @@ const {
   loggedIn,
   isAdmin,
   isTeacherOrAdmin,
+  isTeacher,
 } = require("../middleware/auth.middleware");
 const classController = require("../controllers/classController");
 router.post("/api/class", loggedIn, isAdmin, classController.createClass);
@@ -15,6 +16,12 @@ router.get(
   loggedIn,
   isTeacherOrAdmin,
   classController.getClassById
+);
+router.get(
+  "/api/classbyteacher",
+  loggedIn,
+  isTeacher,
+  classController.getClassByUserIdForTeacher
 );
 router.delete(
   "/api/class/:id",

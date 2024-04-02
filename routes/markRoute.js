@@ -16,10 +16,16 @@ router.get(
   markController.getResult
 );
 router.get(
-  "/api/studentMark",
+  "/api/studentMark/",
   loggedIn,
   isTeacherOrAdmin,
   markController.getMarksByClass
+);
+router.get(
+  "/api/viewMark/",
+  loggedIn,
+  isAdmin,
+  markController.getAllMarksByClass
 );
 router.post(
   "/api/insertMarks",
