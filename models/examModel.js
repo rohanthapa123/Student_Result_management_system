@@ -103,7 +103,7 @@ class ExamModel {
               SELECT teacher_id
                 FROM user
                 INNER JOIN teacher ON user.user_id = teacher.user_id
-                WHERE user.user_id = 184
+                WHERE user.user_id = ?
                 )
                 );
                 
