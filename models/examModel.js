@@ -13,6 +13,7 @@ class ExamModel {
       throw error;
     }
   }
+
   async updateExam(exam_name, class_id, subject_id, exam_date, term, exam_id) {
     try {
       const [result] = await pool.query(
