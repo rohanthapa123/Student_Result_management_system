@@ -44,32 +44,32 @@ exports.updateExam = async (req, res) => {
 };
 exports.getExams = async (req, res) => {
   try {
-    const { id: class_id } = req.query;
-    const [result] = await examService.getExams();
-    // console.log(result);
-    res.status(200).json({ data: result });
-  } catch (error) {
-    console.log("error at examController", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-exports.getExamByClassId = async (req, res) => {
-  try {
-    const class_id = req.params.id;
+    const { class_id } = req.query;
+    console.log(class_id)
     const role = req.session.role;
-    if (role === "admin") {
-      const [result] = await examService.getExamByClassId(class_id);
-      res.status(200).json({ data: result });
-    }else if( role === "teacher"){
-      const [result] = await examService.getExamOfTeacherClass(req.session.user_id , class_id);
+    if (class_id) {
+      if (role === "admin") {
+        const [result] = await examService.getExams(class_id);
+        // console.log(result);
+        res.status(200).json({ data: result });
+      } else if (role === "teacher") {
+        const [result] = await examService.getExamOfTeacherClass(
+          req.session.user_id,
+          class_id
+        );
+        res.status(200).json({ data: result });
+      }
+    } else {
+      const [result] = await examService.getExams();
+      // console.log(result);
       res.status(200).json({ data: result });
     }
-    // console.log(result);
   } catch (error) {
     console.log("error at examController", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 exports.getExamById = async (req, res) => {
   try {
     const id = req.params.id;

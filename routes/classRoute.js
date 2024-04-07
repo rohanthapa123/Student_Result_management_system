@@ -17,12 +17,7 @@ router.get(
   isTeacherOrAdmin,
   classController.getClassById
 );
-router.get(
-  "/api/classbyteacher",
-  loggedIn,
-  isTeacher,
-  classController.getClassByUserIdForTeacher
-);
+
 router.delete(
   "/api/class/:id",
   loggedIn,

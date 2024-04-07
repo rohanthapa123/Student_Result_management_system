@@ -41,9 +41,20 @@ exports.editClass = async (req, res) => {
 };
 exports.getClass = async (req, res) => {
   try {
-    const [result] = await classService.getClass();
+    const role = req.session.role;
+    if (role === "teacher") {
+      const user_id = req.session.user_id;
+      // console.log(req.session);
+      // console.log(user_id);
+      // console.log("hello hello hello");
+      const [result] = await classService.getClassByUserIdForTeacher(user_id);
+      // console.log(result);
+      res.status(200).json({ data: result });
+    } else if (role === "admin") {
+      const [result] = await classService.getClass();
+      res.status(200).json({ data: result });
+    }
     // console.log(result);
-    res.status(200).json({ data: result });
   } catch (error) {
     console.log("error at classController", error);
     res.status(500).json({ message: "Internal server error" });
@@ -60,20 +71,7 @@ exports.getClassById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-exports.getClassByUserIdForTeacher = async (req, res) => {
-  try {
-    const user_id = req.session.user_id;
-    // console.log(req.session);
-    // console.log(user_id);
-    // console.log("hello hello hello");
-    const [result] = await classService.getClassByUserIdForTeacher(user_id);
-    // console.log(result);
-    res.status(200).json({ data : result });
-  } catch (error) {
-    console.log("error at classController", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+
 exports.deleteClassByID = async (req, res) => {
   try {
     const class_id = req.params.id;

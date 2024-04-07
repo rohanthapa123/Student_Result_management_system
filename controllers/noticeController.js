@@ -1,24 +1,5 @@
 const noticeService = require("../services/noticeService");
-exports.getOpenNotice = async (req, res) => {
-  try {
-    const [result] = await noticeService.getOpenNotice();
-    // console.log(result);
-    res.status(200).json({ data: result });
-  } catch (error) {
-    console.log("Error at notice Controller", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-exports.getNotice = async (req, res) => {
-  try {
-    const [result] = await noticeService.getNotice();
-    // console.log(result);
-    res.status(200).json({ data: result });
-  } catch (error) {
-    console.log("Error at notice Controller", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
+
 exports.getNoticeById = async (req, res) => {
   try {
     const id = req.params.id;
@@ -30,17 +11,29 @@ exports.getNoticeById = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-exports.getNoticeByClass = async (req, res) => {
+exports.getNotice = async (req, res) => {
   try {
     const user_id = req.session.user_id;
-    const [result] = await noticeService.getNoticeByClass(user_id);
-    // console.log(result);
-    res.status(200).json({ data: result });
+    const role = req.session.role;
+    if (role === "admin") {
+      const [result] = await noticeService.getNotice();
+      // console.log(result);
+      res.status(200).json({ data: result });
+    } else if (role === "student") {
+      const [result] = await noticeService.getNotice(user_id , role);
+      // console.log(result);
+      res.status(200).json({ data: result });
+    }else if (role === "teacher"){
+      const [result] = await noticeService.getNotice(user_id , role);
+      // console.log(result);
+      res.status(200).json({ data: result });
+    }
   } catch (error) {
     console.log("Error at notice Controller", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 exports.deleteNotice = async (req, res) => {
   try {
     const id = req.params.id;
@@ -55,8 +48,10 @@ exports.deleteNotice = async (req, res) => {
 
 exports.createNotice = async (req, res) => {
   try {
+    // const role = req.session.role;
     const notice_data = req.body;
-    // console.log(notice_data)
+    console.log(notice_data);
+
     const [result] = await noticeService.createNotice(notice_data);
     // console.log(result);
     res.status(200).json({

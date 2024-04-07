@@ -1,18 +1,11 @@
 const noticeModel = require("../models/noticeModel")
 const dateTimeUtil = require("../utils/dateTimeUtil")
 
-exports.getOpenNotice = async () =>{
+
+exports.getNotice = async (user_id , role) =>{
     try {
-        const [result] = await noticeModel.getOpenNotice();
-        return [result];
-    } catch (error) {
-        console.log("Error at noticeService",error);
-        throw error;
-    }
-}
-exports.getNotice = async () =>{
-    try {
-        const [result] = await noticeModel.getNotice();
+
+        const [result] = await noticeModel.getNotice(user_id , role);
         // console.log(result)
         return [result];
     } catch (error) {
@@ -30,16 +23,7 @@ exports.getNoticeById = async (id) =>{
         throw error;
     }
 }
-exports.getNoticeByClass = async (user_id) =>{
-    try {
-        const [result] = await noticeModel.getNoticeByClass(user_id);
-        // console.log(result)
-        return [result];
-    } catch (error) {
-        console.log("Error at noticeService",error);
-        throw error;
-    }
-}
+
 exports.deleteNotice = async (id) =>{
     try {
         const resp = await noticeModel.deleteNotice(id);
@@ -67,4 +51,4 @@ exports.updateNotice = async (notice_data) =>{
         console.log("Error at noticeService updating",error);
         throw error;
     }
-}
+} 

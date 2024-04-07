@@ -2,8 +2,8 @@ const userModel = require("../models/userModel");
 const generatePassword = require("../utils/passwordUtil");
 const bcrypt = require("bcryptjs");
 const sendCredential = require("../utils/sendCredentials");
-const fs = require("fs")
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
 exports.registerUser = async (userData) => {
   try {
     // console.log(userData.email);
@@ -15,16 +15,20 @@ exports.registerUser = async (userData) => {
       // error.message = "Email already used";
       throw error;
     }
-    
-    
+
     const password = generatePassword();
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);
-    
+
     const user = { ...userData, password: hashedPassword };
     const newUser = await userModel.createUser(user);
     console.log(password);
-    sendCredential(userData.email, password);
+    try {
+      sendCredential(userData.email, password);
+    } catch (error) {
+      console.log("Error sending email");
+      throw error;
+    }
     return newUser;
   } catch (error) {
     console.log("error in userService", error);
@@ -84,7 +88,7 @@ exports.getUserById = async (id) => {
 exports.getOwnData = async (id) => {
   try {
     const [results] = await userModel.getOwnData(id);
-  
+
     return [results[0]];
   } catch (error) {
     console.log("error at user service", error);
@@ -111,12 +115,12 @@ exports.changePassword = async (password, user_id) => {
   }
 };
 
-exports.changeProfile = async (image, user_id) =>{
+exports.changeProfile = async (image, user_id) => {
   try {
-    const result = await userModel.changeProfile(image,user_id);
+    const result = await userModel.changeProfile(image, user_id);
     return result;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw error;
   }
-}
+};

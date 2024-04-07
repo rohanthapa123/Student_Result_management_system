@@ -37,29 +37,26 @@ class ExamModel {
       throw error;
     }
   }
-  async getExams() {
+  async getExams(class_id) {
     try {
-      const [result] = await pool.query(
-        " SELECT exam.*, class_name, subject_name from exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id"
-      );
-      return [result];
+      if (class_id) {
+        const [result] = await pool.query(
+          " SELECT exam.*, class_name, subject_name from exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id WHERE exam.class_id = ?",
+          [class_id]
+        );
+        return [result];
+      } else {
+        const [result] = await pool.query(
+          " SELECT exam.*, class_name, subject_name from exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id"
+        );
+        return [result];
+      }
     } catch (error) {
       console.log("Error at exam model", error);
       throw error;
     }
   }
-  async getExamByClassId(class_id) {
-    try {
-      const [result] = await pool.query(
-        " SELECT exam.*, class_name, subject_name from exam inner join class on exam.class_id = class.class_id inner join subject on exam.subject_id = subject.subject_id WHERE exam.class_id = ?",
-        [class_id]
-      );
-      return [result];
-    } catch (error) {
-      console.log("Error at exam model", error);
-      throw error;
-    }
-  }
+
   async getExamById(id) {
     try {
       const [result] = await pool.query(
