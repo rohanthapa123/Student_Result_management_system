@@ -13,7 +13,15 @@ class StudentModel {
     try {
       const [result] = await pool.query(
         "INSERT INTO student (user_id,class_id,section_id,roll_no,admission_id,blood_group,nationality) VALUES (?,?,?,?,?,?,?)",
-        [user_id, class_id, section_id,roll_no, admission_id, blood_group, nationality]
+        [
+          user_id,
+          class_id,
+          section_id,
+          roll_no,
+          admission_id,
+          blood_group,
+          nationality,
+        ]
       );
       return result;
     } catch (error) {
@@ -27,12 +35,12 @@ class StudentModel {
     section_id,
     roll_no,
     blood_group,
-    nationality,
+    nationality
   ) {
     try {
       const [result] = await pool.query(
         "UPDATE student SET class_id = ? ,section_id = ? , roll_no = ?,blood_group = ? ,nationality = ? WHERE student_id = ?",
-        [class_id, section_id, roll_no, blood_group, nationality , student_id]
+        [class_id, section_id, roll_no, blood_group, nationality, student_id]
       );
       return result;
     } catch (error) {
@@ -40,12 +48,19 @@ class StudentModel {
       throw error;
     }
   }
-  async getAllStudents() {
+  async getAllStudents(id) {
     try {
-      const [result] = await pool.query(
-        "select fname, mname, lname,role,email,image, dob, student.user_id,student_id,student.class_id, student.section_id,admission_id, blood_group, nationality,class_name, section_name from student inner join user on student.user_id = user.user_id inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id"
-      );
-      return [result];
+      if (id) {
+        const [result] = await pool.query(
+          "select fname, mname, lname,role,email,image, dob, student.user_id,student_id,student.class_id, student.section_id,admission_id, blood_group, nationality,class_name, section_name from student inner join user on student.user_id = user.user_id inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id where student.class_id = ?",[id]
+        );
+        return [result];
+      } else {
+        const [result] = await pool.query(
+          "select fname, mname, lname,role,email,image, dob, student.user_id,student_id,student.class_id, student.section_id,admission_id, blood_group, nationality,class_name, section_name from student inner join user on student.user_id = user.user_id inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id"
+        );
+        return [result];
+      }
     } catch (error) {
       console.log("Error ar student model", error);
       throw error;
@@ -54,7 +69,8 @@ class StudentModel {
   async getStudentById(id) {
     try {
       const [result] = await pool.query(
-        "select fname, mname, lname,role,email,image, dob,gender, permanent_address, temporary_address, primary_contact, secondary_contact, student.user_id,student_id,student.class_id, student.section_id,admission_id, roll_no, blood_group, nationality,class_name, section_name from student inner join user on student.user_id = user.user_id inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id where student.student_id = ?",[id]
+        "select fname, mname, lname,role,email,image, dob,gender, permanent_address, temporary_address, primary_contact, secondary_contact, student.user_id,student_id,student.class_id, student.section_id,admission_id, roll_no, blood_group, nationality,class_name, section_name from student inner join user on student.user_id = user.user_id inner join class on student.class_id = class.class_id inner join section on student.section_id = section.section_id where student.student_id = ?",
+        [id]
       );
       return [result];
     } catch (error) {
