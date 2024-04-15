@@ -2,13 +2,20 @@ const studentModel = require("../models/studentModel");
 
 exports.getAllStudents = async (req, res) => {
   try {
-    const { class_id:id } = req.query;
+    const { class_id:id , search: sid } = req.query;
     if (id) {
       const [result] = await studentModel.getAllStudents(id);
       res
         .status(200)
         .json({ mesage: "student Data got successfully", data: result });
-    } else {
+    } else if(sid) {
+
+      const [result] = await studentModel.getAllStudents(null , sid);
+      res
+        .status(200)
+        .json({ mesage: "student Data got successfully", data: result });
+    }else{
+
       const [result] = await studentModel.getAllStudents();
       res
         .status(200)
