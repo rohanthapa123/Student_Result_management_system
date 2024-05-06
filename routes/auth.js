@@ -9,6 +9,7 @@ router.post("/api/login", authcontroller.login);
 router.post("/api/logout",  authcontroller.logout);
 
 router.post("/api/changepassword",loggedIn, authcontroller.changePassword)
+router.post("/api/resetpassword",loggedIn,isAdmin,authcontroller.resetPassword)
 
 router.get("/api/check-auth",loggedIn,routePermissionController.isAuthenticated);
 router.get("/api/isAdmin",loggedIn,isAdmin, routePermissionController.isAuthenticated);

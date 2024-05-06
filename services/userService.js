@@ -115,6 +115,25 @@ exports.changePassword = async (password, user_id) => {
   }
 };
 
+exports.resetPassword = async (user_id , email) =>{
+  try {
+    const password = generatePassword();
+
+    try {
+      sendCredential(email, password , true);
+    } catch (error) {
+      console.log("Error sending email");
+      throw error;
+    }
+    const hashedPassword = await bcrypt.hash(password, 8);
+    const result = await userModel.updatePassword(hashedPassword, user_id);
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 exports.changeProfile = async (image, user_id) => {
   try {
     const result = await userModel.changeProfile(image, user_id);

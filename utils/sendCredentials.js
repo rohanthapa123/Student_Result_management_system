@@ -13,13 +13,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendCredential(email, password) {
+async function sendCredential(email, password , reset) {
   try {
     const info = await transporter.sendMail({
       from: '"Rohan Thapa" <abdSchool@result.net>',
       to: email,
       subject: "Welcome to our app",
-      text: `Thank you for registering with our app!\n\nYour email is :${email} and\n\nYour password is:${password} \n\n Please change your password on 1st login`,
+      text: `Thank you for registering with our app!\n\nYour email is :${email} and\n\nYour ${reset ? "new" : ""} password is:${password} \n\n Please change your password on 1st login`,
     });
 
     console.log("message SEnd to " + email);

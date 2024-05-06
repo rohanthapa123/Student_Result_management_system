@@ -66,3 +66,15 @@ exports.changePassword = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.resetPassword = async (req, res, next) => {
+  try {
+    const {id:user_id,email} = req.query;
+    const result = await userService.resetPassword(user_id , email);
+    res.status(200).json({message: "Password Reset Successfully"})
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

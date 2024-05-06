@@ -3,6 +3,7 @@ const userService = require("../services/userService");
 const adminService = require("../services/adminService");
 const teacherService = require("../services/teacherService");
 const studentService = require("../services/studentService");
+const generatePassword = require("../utils/passwordUtil");
 
 exports.register = async (req, res) => {
   // console.log(req.body);
@@ -28,10 +29,10 @@ exports.updateUser = async (req, res) => {
   try {
     const userData = req.body;
     console.log(userData);
-    
+
     // console.log("userData",userData)
     const result = await userService.updateUser(userData);
-    
+
     return res.json({ message: "Done", insertId: result.insertId });
   } catch (error) {
     if (error.status && error.message) {
@@ -123,3 +124,5 @@ exports.changeProfilePicture = async (req, res, next) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
