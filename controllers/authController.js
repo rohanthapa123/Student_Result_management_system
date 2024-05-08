@@ -38,9 +38,9 @@ exports.changePassword = async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
   const user_id = req.session.user_id;
   try {
-    console.log("current",currentPassword, newPassword);
+    console.log("current", currentPassword, newPassword);
     const [user] = await userService.getUserById(user_id);
-    console.log("user",user)
+    console.log("user", user);
     const passwordMatch = await bcrypt.compare(
       currentPassword,
       user[0].password
@@ -69,10 +69,9 @@ exports.changePassword = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   try {
-    const {id:user_id,email} = req.query;
-    const result = await userService.resetPassword(user_id , email);
-    res.status(200).json({message: "Password Reset Successfully"})
-
+    const { email } = req.body;
+    const result = await userService.resetPassword(email);
+    res.status(200).json({ message: "Password Reset Successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });

@@ -115,7 +115,7 @@ exports.changePassword = async (password, user_id) => {
   }
 };
 
-exports.resetPassword = async (user_id , email) =>{
+exports.resetPassword = async (email) =>{
   try {
     const password = generatePassword();
 
@@ -126,7 +126,7 @@ exports.resetPassword = async (user_id , email) =>{
       throw error;
     }
     const hashedPassword = await bcrypt.hash(password, 8);
-    const result = await userModel.updatePassword(hashedPassword, user_id);
+    const result = await userModel.resetPassword(hashedPassword,email);
     return result;
   } catch (error) {
     console.log(error);

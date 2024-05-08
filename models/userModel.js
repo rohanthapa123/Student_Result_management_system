@@ -284,6 +284,18 @@ class UserModel {
       throw error;
     }
   }
+  async resetPassword(password, email) {
+    try {
+      const [result] = await pool.query(
+        "UPDATE user SET password = ? WHERE email = ?",
+        [password, email]
+      );
+      return result;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
   async getOwnData(user_id) {
     try {
       const [result] = await pool.query(
