@@ -1,14 +1,15 @@
 const { pool } = require("../config/database");
 
 class MarksModel {
-  async insertMark(marks) {
+  async insertMark(marks, class_id) {
     let connection;
     try {
       connection = await pool.getConnection();
       await connection.beginTransaction();
+      console.log(marks, class_id);
       for (const mark of marks) {
         await connection.query(
-          "INSERT INTO marks (student_id,subject_id, exam_id, marks_obtained, remarks, grade )VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE marks_obtained = VALUES(marks_obtained), remarks = VALUES(remarks), grade = VALUES(grade)",
+          "INSERT INTO marks (student_id,subject_id, exam_id, marks_obtained, remarks, grade , class_id )VALUES (?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE marks_obtained = VALUES(marks_obtained), remarks = VALUES(remarks), grade = VALUES(grade)",
           [
             mark.student_id,
             mark.subject_id,
@@ -16,6 +17,7 @@ class MarksModel {
             mark.marks_obtained,
             mark.remarks,
             mark.grade,
+            class_id,
           ]
         );
       }
@@ -112,14 +114,15 @@ INNER JOIN
 INNER JOIN 
     marks m ON stu.student_id = m.student_id
 INNER JOIN 
-    subject s ON m.subject_id = s.subject_id
+    subject s ON m.subject_id = s.subject_id  
 INNER JOIN 
-    exam e ON m.exam_id = e.exam_id
+    exam e ON m.exam_id = e.exam_id AND stu.class_id = e.class_id
 WHERE 
-    stu.class_id = ?
+    e.class_id = ?
     AND e.term = ?
 GROUP BY 
     u.user_id;
+
     
      `,
         [class_id, term]

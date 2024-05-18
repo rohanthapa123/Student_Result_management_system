@@ -1,8 +1,8 @@
 const MarksModel = require("../models/marksModel");
 
-exports.insertMark = async (marks) => {
+exports.insertMark = async (marks , class_id) => {
   try {
-    const result = await MarksModel.insertMark(marks);
+    const result = await MarksModel.insertMark(marks , class_id);
     return result;
   } catch (error) {
     console.log("Error at marksService", error);

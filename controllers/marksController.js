@@ -4,11 +4,11 @@ exports.insertMark = async (req, res) => {
   try {
     // const { subject_id, exam_id, student_id, marks_obtained, remarks, grade } =
     //   req.body;
-    const marks = req.body;
-    // console.log(req.body);
-    const result = await marksService.insertMark(marks);
+    const { result:marks, class: class_id } = req.body;
+    console.log(req.body);
+    const result = await marksService.insertMark(marks, class_id);
     console.log(result);
-    res.status(200).json({ messaga: "marks inserted" });
+    res.status(200).json({ message: "marks inserted" });
   } catch (error) {
     console.log("error at markController", error);
     res.status(500).json({ message: "Internal server error" });
