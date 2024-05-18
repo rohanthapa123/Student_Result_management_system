@@ -125,4 +125,26 @@ exports.changeProfilePicture = async (req, res, next) => {
   }
 };
 
-
+exports.bulkDelete = async (req, res, next) => {
+  // console.log("Hello api");
+  const { userIds } = req.body;
+  console.log(req.body);
+  try {
+    const response = await userService.bulkDelete(userIds);
+    res.status(200 ).json({ message: "Bulk Delete Success" });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message: "Error deleting" , error: error})
+  }
+};
+exports.bulkUpdate = async (req, res, next) => {
+  const { userIds , newClass} = req.body;
+  console.log(req.body);
+  try {
+    const response = await userService.bulkUpdate(userIds , newClass);
+    res.status(200 ).json({ message: "Bulk Update Success" });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message: "Error Updating" , error: error})
+  }
+};

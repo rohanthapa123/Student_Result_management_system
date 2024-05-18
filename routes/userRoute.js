@@ -8,6 +8,8 @@ const {
   changeProfilePicture,
   getUserCount,
   updateUser,
+  bulkUpdate,
+  bulkDelete,
 } = require("../controllers/userController");
 const { loggedIn, isAdmin } = require("../middleware/auth.middleware");
 const upload = require("../middleware/multer.middleware");
@@ -24,7 +26,12 @@ router.post(
 );
 router.get("/api/users", loggedIn, isAdmin, getAllUser);
 router.get("/api/users/count", loggedIn, isAdmin, getUserCount);
+router.patch("/api/users/bulkactionupdate",loggedIn, isAdmin , bulkUpdate)
+router.delete("/api/users/bulkactiondelete",loggedIn, isAdmin , bulkDelete)
 router.get("/api/users/:id", loggedIn, isAdmin, getUserById);
 router.get("/api/myprofile", loggedIn, getOwnDetail);
 router.delete("/api/users/:id", loggedIn, isAdmin, deleteUserById);
+
+
+
 module.exports = router;

@@ -6,4 +6,5 @@ const router = express.Router();
 router.get("/api/students",loggedIn,isAdmin,studentController.getAllStudents)
 router.get("/api/students/:id",loggedIn,isAdmin,studentController.getStudentById)
 
+
 module.exports = router;

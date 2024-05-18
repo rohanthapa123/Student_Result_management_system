@@ -84,11 +84,15 @@ class UserModel {
           console.log(subjects);
 
           // await teacherService.insertTeacherData(result.insertId, subjects);
-          const [teacherresult] = await connection.query("INSERT INTO teacher (user_id) VALUES (?)", [
-            result.insertId,
-          ]);
-          subjects.forEach(async item => {
-            await connection.query("INSERT INTO teacher_subject_map (teacher_id , subject_id) VALUES (?,?)",[ teacherresult.insertId , item.value])
+          const [teacherresult] = await connection.query(
+            "INSERT INTO teacher (user_id) VALUES (?)",
+            [result.insertId]
+          );
+          subjects.forEach(async (item) => {
+            await connection.query(
+              "INSERT INTO teacher_subject_map (teacher_id , subject_id) VALUES (?,?)",
+              [teacherresult.insertId, item.value]
+            );
           });
           break;
         default:
@@ -132,7 +136,7 @@ class UserModel {
       nationality,
       student_id,
       subjects,
-      teacher_id
+      teacher_id,
     } = userData;
     try {
       connection = await pool.getConnection();
@@ -329,6 +333,44 @@ class UserModel {
         [image, user_id]
       );
       return result;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async bulkDelete(ids) {
+    try {
+      const promises = ids.map(async (id) => {
+        const result = await pool.query("DELETE FROM user WHERE user_id = ?", [
+          id,
+        ]);
+        return result;
+      });
+
+      const deleteResults = await Promise.all(promises);
+
+      console.log(deleteResults);
+
+      return deleteResults;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async bulkUpdate(ids , newClass) {
+    try {
+      const promises = ids.map(async (id) => {
+        const result = await pool.query("UPDATE student SET class_id = ? WHERE user_id = ?", [
+          newClass, id,
+        ]);
+        return result;
+      });
+
+      const updateResult = await Promise.all(promises);
+
+      console.log(updateResult);
+
+      return updateResult;
     } catch (error) {
       console.log(error);
       throw error;

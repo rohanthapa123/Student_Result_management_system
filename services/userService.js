@@ -143,3 +143,22 @@ exports.changeProfile = async (image, user_id) => {
     throw error;
   }
 };
+
+exports.bulkDelete = async (ids) =>{
+  try {
+    const result = await userModel.bulkDelete(ids);
+    return result;
+  } catch (error) {
+    console.log("Error in userService");
+    throw error;
+  }
+}
+exports.bulkUpdate = async (ids, newClass) =>{
+  try {
+    const result = await userModel.bulkUpdate(ids , newClass);
+    return result;
+  } catch (error) {
+    console.log("Error in userService");
+    throw error;
+  }
+}
