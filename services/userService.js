@@ -153,9 +153,9 @@ exports.bulkDelete = async (ids) =>{
     throw error;
   }
 }
-exports.bulkUpdate = async (ids, newClass) =>{
+exports.bulkUpdate = async (ids, newClass , newSection) =>{
   try {
-    const result = await userModel.bulkUpdate(ids , newClass);
+    const result = await userModel.bulkUpdate(ids , newClass , newSection);
     return result;
   } catch (error) {
     console.log("Error in userService");

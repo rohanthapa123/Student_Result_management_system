@@ -357,12 +357,13 @@ class UserModel {
       throw error;
     }
   }
-  async bulkUpdate(ids , newClass) {
+  async bulkUpdate(ids, newClass, section_id) {
     try {
       const promises = ids.map(async (id) => {
-        const result = await pool.query("UPDATE student SET class_id = ? WHERE user_id = ?", [
-          newClass, id,
-        ]);
+        const result = await pool.query(
+          "UPDATE student SET class_id = ? , section_id = ? WHERE user_id = ?",
+          [newClass, section_id, id]
+        );
         return result;
       });
 

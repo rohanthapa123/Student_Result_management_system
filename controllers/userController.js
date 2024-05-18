@@ -138,10 +138,10 @@ exports.bulkDelete = async (req, res, next) => {
   }
 };
 exports.bulkUpdate = async (req, res, next) => {
-  const { userIds , newClass} = req.body;
+  const { userIds , newClass , newSection} = req.body;
   console.log(req.body);
   try {
-    const response = await userService.bulkUpdate(userIds , newClass);
+    const response = await userService.bulkUpdate(userIds , newClass , newSection);
     res.status(200 ).json({ message: "Bulk Update Success" });
   } catch (error) {
     console.log(error)
