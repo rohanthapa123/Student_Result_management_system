@@ -6,6 +6,7 @@ const {
   isAdmin,
   isTeacher,
   isTeacherOrAdmin,
+  isStudent,
 } = require("../middleware/auth.middleware");
 const examController = require("../controllers/examController");
 router.post("/api/exam", loggedIn, isAdmin, examController.createExam);
@@ -17,6 +18,12 @@ router.get(
   loggedIn,
   isTeacher,
   examController.getExamOfTeacherClass
+);
+router.get(
+  "/api/terms",
+  loggedIn,
+  isStudent,
+  examController.getTerms
 );
 router.delete(
   "/api/exam/:id",

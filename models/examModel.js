@@ -115,6 +115,18 @@ class ExamModel {
       throw error;
     }
   }
+  async getTerms(user_id) {
+    try {
+      const [result] = await pool.query(
+        "select distinct term from exam inner join student on student.class_id = exam.class_id where student.user_id = ?",
+        [user_id]
+      );
+      return [result];
+    } catch (error) {
+      console.log("Error at exam model", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new ExamModel();

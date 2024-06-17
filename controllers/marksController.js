@@ -29,6 +29,35 @@ exports.getResult = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+exports.getTerminalMarks = async (req, res) => {
+  const exam_term = req.params.term;
+  console.log(req.params);
+  console.log(exam_term);
+  const user_id = req.session.user_id;
+  // console.log(req.body)
+  try {
+    const result = await marksService.getTerminalMarks(user_id, exam_term);
+    // console.log(result);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.log("error at markController", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+exports.getallterminalmarks = async (req, res) => {
+  // console.log(req.params);
+  // console.log(exam_term);
+  const user_id = req.session.user_id;
+  // console.log(req.body)
+  try {
+    const result = await marksService.getallterminalmarks(user_id);
+    // console.log(result);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    console.log("error at markController", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 exports.getMarksByClass = async (req, res) => {
   const exam_id = req.query.exam_id;
   const class_id = req.query.class_id;

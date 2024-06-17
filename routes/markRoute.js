@@ -16,6 +16,18 @@ router.get(
   markController.getResult
 );
 router.get(
+  "/api/terminalMarks/:term",
+  loggedIn,
+  isStudent,
+  markController.getTerminalMarks
+);
+router.get(
+  "/api/allterminalmarks",
+  loggedIn,
+  isStudent,
+  markController.getallterminalmarks
+);
+router.get(
   "/api/studentMark/",
   loggedIn,
   isTeacherOrAdmin,

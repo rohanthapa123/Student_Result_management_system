@@ -20,6 +20,28 @@ exports.getResult = async ( user_id, exam_term) => {
     throw error;
   }
 };
+exports.getTerminalMarks = async ( user_id, exam_term) => {
+  try {
+    const result = await MarksModel.getTerminalMarks(
+            user_id, exam_term
+    );
+    return result;
+  } catch (error) {
+    console.log("Error at marksService", error);
+    throw error;
+  }
+};
+exports.getallterminalmarks = async ( user_id) => {
+  try {
+    const result = await MarksModel.getallterminalmarks(
+            user_id
+    );
+    return result;
+  } catch (error) {
+    console.log("Error at marksService", error);
+    throw error;
+  }
+};
 exports.getMarksByClass = async (class_id, exam_id) => {
   try {
     const [result] = await MarksModel.getMarksByClass(class_id, exam_id);

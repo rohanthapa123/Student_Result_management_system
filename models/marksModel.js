@@ -161,6 +161,36 @@ GROUP BY
       throw error;
     }
   }
+  async getTerminalMarks(user_id, exam_term) {
+    try {
+      // console.log(user_id, exam_term);
+      const [result] = await pool.query(
+        ` select marks_id , marks.subject_id, marks_obtained, subject_name from marks inner join student on student.student_id = marks.student_id inner join subject on marks.subject_id = subject.subject_id where marks.exam_id in (select exam_id from student inner join exam on student.class_id = exam.class_id where exam.term = ? and student.user_id = ?) and student.user_id = ?`,
+        [exam_term, user_id, user_id]
+      );
+
+      // console.log(result)
+      return [result]
+    } catch (error) {
+      console.log(("Error at marks model", error));
+      throw error;
+    }
+  }
+  async getallterminalmarks(user_id) {
+    try {
+      // console.log(user_id, exam_term);
+      const [result] = await pool.query(
+        `select student.student_id, exam.exam_id, marks.marks_obtained, exam.term, subject.subject_name, subject.subject_id from marks inner join student on student.student_id = marks.student_id inner join subject on marks.subject_id = subject.subject_id inner join exam on marks.exam_id = exam.exam_id where marks.exam_id in (select exam_id from student inner join exam on student.class_id = exam.class_id where  student.user_id = ?) and student.user_id = ?`,
+        [user_id, user_id]
+      );
+
+      // console.log(result)
+      return [result]
+    } catch (error) {
+      console.log(("Error at marks model", error));
+      throw error;
+    }
+  }
 }
 
 module.exports = new MarksModel();
