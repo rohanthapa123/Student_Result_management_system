@@ -8,7 +8,7 @@ const moment = require("moment-timezone");
 const authMiddleware = require("./middleware/auth.middleware.js");
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
