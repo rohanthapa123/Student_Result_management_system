@@ -9,6 +9,7 @@ const authMiddleware = require("./middleware/auth.middleware.js");
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
+    methods: ['GET','POST','PATCH','DELETE'],
     credentials: true,
   })
 );
