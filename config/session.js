@@ -27,9 +27,10 @@ module.exports = session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: process.env.SECURE,
+    secure: true,
     httpOnly: true,
-    sameSite: process.env.SAMESITE,
-    path : '/'
+    maxAge : 60 * 60 * 1000,
+    sameSite: "None",
+    path: "/",
   },
 });
