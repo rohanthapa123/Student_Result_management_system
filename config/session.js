@@ -27,8 +27,8 @@ module.exports = session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.SECURE,
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    sameSite: process.env.SAMESITE,
   },
 });
