@@ -10,15 +10,16 @@ exports.login = async (req, res) => {
       return res.status(402).json({ message: "Wrong Credentials" });
     }
     const passwordMatch = await bcrypt.compare(password, result[0].password);
-    // console.log(passwordMatch);
-    if (passwordMatch === false) {
+    if (!passwordMatch) {
       return res.status(402).json({ message: "Wrong Password" });
     }
     req.session.user_id = result[0].user_id;
     req.session.role = result[0].role;
-    console.log(req.session);
+    console.log("Session after login:", req.session);
+    console.log("Set-Cookie header:", res.getHeaders()["set-cookie"]);
     return res.status(200).json({ message: "Login Success", data: result });
   } catch (error) {
+    console.error("Login error:", error);
     return res.status(500).json({ message: error.message });
   }
 };

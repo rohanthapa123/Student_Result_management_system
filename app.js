@@ -6,13 +6,16 @@ const sessionMiddleware = require("./config/session.js");
 const cors = require("cors");
 const moment = require("moment-timezone");
 const authMiddleware = require("./middleware/auth.middleware.js");
+
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ['GET','POST','PATCH','DELETE'],
+    origin: process.env.FRONTEND_URL, 
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
   })
 );
+
 app.use(
   express.urlencoded({
     extended: true,
