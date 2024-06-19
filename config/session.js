@@ -26,6 +26,7 @@ module.exports = session({
   store: sessionStore,
   resave: false,
   saveUninitialized: true,
+  proxy: true,
   cookie: {
     secure: true,
     httpOnly: true,

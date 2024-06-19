@@ -7,6 +7,8 @@ const cors = require("cors");
 const moment = require("moment-timezone");
 const authMiddleware = require("./middleware/auth.middleware.js");
 
+app.set('trust proxy', 1);
+
 app.use(cookieParser());
 
 app.use(sessionMiddleware);
