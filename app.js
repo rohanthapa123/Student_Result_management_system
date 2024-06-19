@@ -16,7 +16,7 @@ app.use(sessionMiddleware);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL, 
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    methods: ['GET', 'POST','PUT', 'PATCH', 'DELETE'],
     credentials: true,
   })
 );
