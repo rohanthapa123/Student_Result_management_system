@@ -7,6 +7,9 @@ const cors = require("cors");
 const moment = require("moment-timezone");
 const authMiddleware = require("./middleware/auth.middleware.js");
 
+app.use(cookieParser());
+
+app.use(sessionMiddleware);
 
 app.use(
   cors({
@@ -32,9 +35,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cookieParser());
-
-app.use(sessionMiddleware);
 
 app.use(express.json());
 const publicDirectory = path.join(__dirname, "./public");
