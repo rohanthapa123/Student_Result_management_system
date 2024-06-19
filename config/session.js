@@ -30,5 +30,6 @@ module.exports = session({
     secure: process.env.SECURE,
     httpOnly: true,
     sameSite: process.env.SAMESITE,
+    path : '/'
   },
 });
