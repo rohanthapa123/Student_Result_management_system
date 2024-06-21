@@ -46,7 +46,7 @@ exports.getExams = async (req, res) => {
   try {
     const { class_id } = req.query;
     console.log(class_id)
-    const role = req.session.role;
+    const role = req.user.role;
     if (class_id) {
       if (role === "admin") {
         const [result] = await examService.getExams(class_id);
@@ -54,7 +54,7 @@ exports.getExams = async (req, res) => {
         res.status(200).json({ data: result });
       } else if (role === "teacher") {
         const [result] = await examService.getExamOfTeacherClass(
-          req.session.user_id,
+          req.user.user_id,
           class_id
         );
         res.status(200).json({ data: result });
@@ -83,7 +83,7 @@ exports.getExamById = async (req, res) => {
 };
 exports.getExamOfTeacherClass = async (req, res) => {
   try {
-    const user_id = req.session.user_id;
+    const user_id = req.user.user_id;
     const [result] = await examService.getExamOfTeacherClass(user_id);
     // console.log(result);
     res.status(200).json({ data: result });
@@ -94,7 +94,7 @@ exports.getExamOfTeacherClass = async (req, res) => {
 };
 exports.getTerms = async (req, res) => {
   try {
-    const user_id = req.session.user_id;
+    const user_id = req.user.user_id;
     const [result] = await examService.getTerms(user_id);
     // console.log(result);
     res.status(200).json({ data: result });

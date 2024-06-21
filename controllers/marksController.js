@@ -18,7 +18,7 @@ exports.getResult = async (req, res) => {
   const exam_term = req.params.term;
   console.log(req.params);
   console.log(exam_term);
-  const user_id = req.session.user_id;
+  const user_id = req.user.user_id;
   // console.log(req.body)
   try {
     const result = await marksService.getResult(user_id, exam_term);
@@ -33,7 +33,7 @@ exports.getTerminalMarks = async (req, res) => {
   const exam_term = req.params.term;
   console.log(req.params);
   console.log(exam_term);
-  const user_id = req.session.user_id;
+  const user_id = req.user.user_id;
   // console.log(req.body)
   try {
     const result = await marksService.getTerminalMarks(user_id, exam_term);
@@ -47,7 +47,7 @@ exports.getTerminalMarks = async (req, res) => {
 exports.getallterminalmarks = async (req, res) => {
   // console.log(req.params);
   // console.log(exam_term);
-  const user_id = req.session.user_id;
+  const user_id = req.user.user_id;
   // console.log(req.body)
   try {
     const result = await marksService.getallterminalmarks(user_id);

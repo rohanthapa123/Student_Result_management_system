@@ -45,7 +45,7 @@ exports.updateUser = async (req, res) => {
 };
 
 exports.getAllUser = async (req, res, next) => {
-  // console.log(req.session);
+  // console.log(req.user);
   try {
     const [rows] = await userService.getAllUser();
     res.status(200).json({ data: rows });
@@ -54,7 +54,7 @@ exports.getAllUser = async (req, res, next) => {
   }
 };
 exports.getUserCount = async (req, res, next) => {
-  // console.log(req.session);
+  // console.log(req.user);
   try {
     const [rows] = await userService.getUserCount();
     res.status(200).json({ data: rows });
@@ -67,9 +67,9 @@ exports.deleteUserById = async (req, res, next) => {
   try {
     // console.log(req.params.id);
     const user_id = req.params.id;
-    console.log("my user_id is ", req.session.user_id);
-    console.log(req.session.user_id && req.session.role);
-    if (req.session.user_id == user_id) {
+    console.log("my user_id is ", req.user.user_id);
+    console.log(req.user.user_id && req.user.role);
+    if (req.user.user_id == user_id) {
       res.status(403).json({ message: "Cannot delete yourself", code: "1434" });
     } else {
       await userService.deleteById(user_id);
@@ -99,7 +99,7 @@ exports.getUserById = async (req, res, next) => {
 exports.getOwnDetail = async (req, res, next) => {
   try {
     // console.log(req.params.id);
-    const user_id = req.session.user_id;
+    const user_id = req.user.user_id;
     const [result] = await userService.getOwnData(user_id);
     console.log(result);
     res.status(200).json({ data: result });
@@ -114,7 +114,7 @@ exports.getOwnDetail = async (req, res, next) => {
 exports.changeProfilePicture = async (req, res, next) => {
   try {
     const image = req.file;
-    const user_id = req.session.user_id;
+    const user_id = req.user.user_id;
     const result = await userService.changeProfile(image.filename, user_id);
     console.log("requst", image);
 

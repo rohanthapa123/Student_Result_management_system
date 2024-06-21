@@ -12,7 +12,7 @@ exports.getComplain = async (req, res) => {
 };
 exports.getMyComplain = async (req, res) => {
   try {
-    const user_id = req.session.user_id;
+    const user_id = req.user.user_id;
     const [result] = await complainService.getMyComplain(user_id);
     // console.log(result);
     res.status(200).json({ data: result });
@@ -37,7 +37,7 @@ exports.createComplain = async (req, res) => {
   try {
     const message = req.body.message;
     console.log(req.body)
-    const user_id = req.session.user_id;
+    const user_id = req.user.user_id;
     // console.log(notice_data)
     const complain_data = {message, user_id}
     console.log("Comalin data",complain_data)
