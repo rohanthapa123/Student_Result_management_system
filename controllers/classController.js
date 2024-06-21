@@ -41,10 +41,10 @@ exports.editClass = async (req, res) => {
 };
 exports.getClass = async (req, res) => {
   try {
-    const role = req.session.role;
+    const role = req.user.role;
     if (role === "teacher") {
-      const user_id = req.session.user_id;
-      // console.log(req.session);
+      const user_id = req.user.user_id;
+      // console.log(req.user);
       // console.log(user_id);
       // console.log("hello hello hello");
       const [result] = await classService.getClassByUserIdForTeacher(user_id);

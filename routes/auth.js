@@ -5,6 +5,7 @@ const {
   isAdmin,
   isTeacher,
   isStudent,
+  verifyRefreshToken,
 } = require("../middleware/auth.middleware");
 const routePermissionController = require("../controllers/routePermissionController");
 const router = express.Router();
@@ -20,6 +21,8 @@ router.post(
   isAdmin,
   authcontroller.resetPassword
 );
+
+router.post('/api/refresh-token' , verifyRefreshToken , authcontroller.newReferenceToken)
 
 router.get(
   "/api/check-auth",

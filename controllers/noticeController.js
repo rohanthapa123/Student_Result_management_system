@@ -13,8 +13,8 @@ exports.getNoticeById = async (req, res) => {
 };
 exports.getNotice = async (req, res) => {
   try {
-    const user_id = req.session.user_id;
-    const role = req.session.role;
+    const user_id = req.user.user_id;
+    const role = req.user.role;
     if (role === "admin") {
       const [result] = await noticeService.getNotice();
       // console.log(result);
@@ -48,7 +48,7 @@ exports.deleteNotice = async (req, res) => {
 
 exports.createNotice = async (req, res) => {
   try {
-    // const role = req.session.role;
+    // const role = req.user.role;
     const notice_data = req.body;
     console.log(notice_data);
 

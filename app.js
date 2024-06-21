@@ -2,7 +2,8 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const cookieParser = require("cookie-parser");
-const sessionMiddleware = require("./config/session.js");
+
+const jwt = require('jsonwebtoken')
 const cors = require("cors");
 const moment = require("moment-timezone");
 const authMiddleware = require("./middleware/auth.middleware.js");
@@ -11,7 +12,6 @@ app.set('trust proxy', 1);
 
 app.use(cookieParser());
 
-app.use(sessionMiddleware);
 
 app.use(
   cors({
@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/images", express.static(path.join(__dirname, "images")));
-app.get("/api/images/:filename", authMiddleware.loggedIn, (req, res) => {
+app.get("/api/images/:filename", (req, res) => {
   const filename = req.params.filename;
   res.sendFile(path.join(__dirname, "images", filename));
 });
