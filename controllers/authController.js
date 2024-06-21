@@ -5,8 +5,6 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const blacklistService = require("../services/tokenBlackList");
 const { generateRefreshToken } = require("../utils/generateAccessToken");
-const path = require("path");
-const { Domain } = require("domain");
 dotenv.config();
 
 exports.login = async (req, res) => {
