@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { user_id: result[0].user_id, role: result[0].role }, // Include relevant user data in the payload
       process.env.JWTSECRET,
-      { expiresIn: "1m" } // Token expiration time
+      { expiresIn: "5m" } // Token expiration time
     );
     const refreshtoken = jwt.sign(
       { user_id: result[0].user_id, role: result[0].role }, // Include relevant user data in the payload
