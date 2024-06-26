@@ -41,3 +41,23 @@ exports.getTeacherById = async (id) =>{
     }
 
 }
+exports.getTeacherClass = async (id) =>{
+    try {
+        const [result] = await teacherModel.getTeacherClass(id);
+        return [result];
+    } catch (error) {
+        console.log("error in teacherService",error);
+        throw error;
+    }
+
+}
+exports.getTeacherSubject = async (id) =>{
+    try {
+        const [result] = await teacherModel.getTeacherSubject(id);
+        return [result];
+    } catch (error) {
+        console.log("error in teacherService",error);
+        throw error;
+    }
+
+}

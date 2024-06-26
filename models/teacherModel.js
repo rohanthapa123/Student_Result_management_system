@@ -35,6 +35,41 @@ class TeacherModel {
       throw error;
     }
   }
+  async getTeacherSubject(id) {
+    try {
+      let [result] = await pool.query(
+        `SELECT teacher.teacher_id, subject.subject_id, subject.subject_name 
+FROM teacher_subject_map 
+INNER JOIN teacher ON teacher_subject_map.teacher_id = teacher.teacher_id
+INNER JOIN subject ON teacher_subject_map.subject_id = subject.subject_id
+WHERE teacher.user_id = ? `,
+        [id]
+      );
+      return [result];
+    } catch (error) {
+      console.log("error at teacherModel", error);
+      throw error;
+    }
+  }
+  async getTeacherClass(id) {
+    try {
+      let [result] = await pool.query(
+        `SELECT DISTINCT class.* 
+          FROM class
+          INNER JOIN class_subject_map ON class.class_id = class_subject_map.class_id
+          INNER JOIN subject ON class_subject_map.subject_id = subject.subject_id
+          INNER JOIN teacher_subject_map ON subject.subject_id = teacher_subject_map.subject_id
+          INNER JOIN teacher ON teacher_subject_map.teacher_id = teacher.teacher_id
+          WHERE teacher.user_id = ?
+        `,
+        [id]
+      );
+      return [result];
+    } catch (error) {
+      console.log("error at teacherModel", error);
+      throw error;
+    }
+  }
   async getTeacherById(id) {
     try {
       let [result] = await pool.query(
