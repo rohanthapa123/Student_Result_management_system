@@ -83,6 +83,9 @@ exports.deleteSectionById = async (req, res) => {
   try {
     const section_id = req.params.id;
     const [result] = await sectionService.deleteSectionById(section_id);
+    console.log("result" , result)
+
+   
     res
       .status(200)
       .json({
