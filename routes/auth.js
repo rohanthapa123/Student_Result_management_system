@@ -27,6 +27,7 @@ router.post('/api/refresh-token' , verifyRefreshToken , authcontroller.newRefere
 router.get(
   "/api/check-auth",
   loggedIn,
+  verifyRefreshToken,
   routePermissionController.isAuthenticated
 );
 router.get(

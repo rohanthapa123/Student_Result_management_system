@@ -25,7 +25,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { user_id: result[0].user_id, role: result[0].role }, // Include relevant user data in the payload
       process.env.JWTSECRET,
-      { expiresIn: "5m" } // Token expiration time
+      { expiresIn: "1m" } // Token expiration time
     );
     const refreshtoken = jwt.sign(
       { user_id: result[0].user_id, role: result[0].role }, // Include relevant user data in the payload
@@ -38,14 +38,14 @@ exports.login = async (req, res) => {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
-      domain : "localhost",
+      domain: "localhost",
       path: "/",
     });
     res.cookie("refreshToken", refreshtoken, {
       secure: false,
       httpOnly: true,
       sameSite: "strict",
-      domain : "localhost",
+      domain: "localhost",
       path: "/",
     });
     console.log(result[0]);
@@ -67,6 +67,7 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res, next) => {
   const { refreshToken } = req.cookies;
+  // blacklistService.addToBlacklist(refreshToken);
   blacklistService.addToBlacklist(refreshToken);
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
@@ -90,6 +91,10 @@ exports.changePassword = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(newPassword, 8);
     const result = await userService.changePassword(hashedPassword, user_id);
+    const { refreshToken } = req.cookies;
+    blacklistService.addToBlacklist(refreshToken);
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
     res.status(200).json({
       message: "password changed successfully",
       insertId: result.insertId,
