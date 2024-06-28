@@ -42,6 +42,7 @@ Follow these steps to set up the project locally:
    ```bash
    git clone https://github.com/rohanthapa123/Student_Result_management_system
    cd Student_Result_management_system
+   git chekout development
    npm install
    ```
 2. **Set up the MySQL database:**
@@ -94,17 +95,26 @@ Here's a list of the main API endpoints:
 
   - POST /api/login: Log in a user
   - POST /api/register: Register a new user
+  - POST /api/changepassword: Change password
+  - POST /api/refresh-token: Generate new token
+  - POST /api/register: Register a new user
+  - POST /api/update: Update a new user details
+
 
 - Users:
 
   - GET /api/users: Get all users
   - GET /api/users/:id: Get a user by ID
-  - PUT /api/users/:id: Update a user
+  - PATCH /api/users/:id: Update a user
   - DELETE /api/users/:id: Delete a user
 
-- Results:
+- Students:
+  - GET /api/students : Get all students
+  - GET /api/students/:id : Get students by ID
 
-  - GET /api/results: Get all results
+- Results:
+  - POST /api/insertMarks : To insert marks
+  - GET /api/results/:term: Get  results for term
   - GET /api/results/:id: Get a result by ID
   - POST /api/results: Add a new result
   - PUT /api/results/:id: Update a result
@@ -155,9 +165,9 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ## Contact
 For any questions or suggestions, please contact:
+- **Rohan Thapa** - [Email](mailto:thaparohan2019@gmail.com)
+- **LinkedIn**: [Rohan Thapa](https://www.linkedin.com/in/rohanthapa)
 
-Rohan Thapa - Email
-LinkedIn: Rohan Thapa
 
 
 
