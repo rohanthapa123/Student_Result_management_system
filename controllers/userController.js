@@ -4,6 +4,7 @@ const adminService = require("../services/adminService");
 const teacherService = require("../services/teacherService");
 const studentService = require("../services/studentService");
 const generatePassword = require("../utils/passwordUtil");
+const { put } = require("@vercel/blob");
 
 exports.register = async (req, res) => {
   // console.log(req.body);
@@ -115,7 +116,12 @@ exports.changeProfilePicture = async (req, res, next) => {
   try {
     const image = req.file;
     const user_id = req.user.user_id;
-    const result = await userService.changeProfile(image.filename, user_id);
+    const blob = await put(image.originalname, image.buffer, {
+      access: "public",
+    });
+    console.log("image",image);
+    console.log("blob",blob);
+     await userService.changeProfile(blob.url, user_id);
     console.log("requst", image);
 
     res.status(200).json({ message: "Image Uploaded" });
@@ -131,20 +137,24 @@ exports.bulkDelete = async (req, res, next) => {
   console.log(req.body);
   try {
     const response = await userService.bulkDelete(userIds);
-    res.status(200 ).json({ message: "Bulk Delete Success" });
+    res.status(200).json({ message: "Bulk Delete Success" });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({message: "Error deleting" , error: error})
+    console.log(error);
+    res.status(500).json({ message: "Error deleting", error: error });
   }
 };
 exports.bulkUpdate = async (req, res, next) => {
-  const { userIds , newClass , newSection} = req.body;
+  const { userIds, newClass, newSection } = req.body;
   console.log(req.body);
   try {
-    const response = await userService.bulkUpdate(userIds , newClass , newSection);
-    res.status(200 ).json({ message: "Bulk Update Success" });
+    const response = await userService.bulkUpdate(
+      userIds,
+      newClass,
+      newSection
+    );
+    res.status(200).json({ message: "Bulk Update Success" });
   } catch (error) {
-    console.log(error)
-    res.status(500).json({message: "Error Updating" , error: error})
+    console.log(error);
+    res.status(500).json({ message: "Error Updating", error: error });
   }
 };

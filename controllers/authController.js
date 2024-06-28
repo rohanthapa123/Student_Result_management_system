@@ -5,8 +5,6 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const blacklistService = require("../services/tokenBlackList");
 const { generateRefreshToken } = require("../utils/generateAccessToken");
-const path = require("path");
-const { Domain } = require("domain");
 dotenv.config();
 
 exports.login = async (req, res) => {
@@ -36,16 +34,16 @@ exports.login = async (req, res) => {
     // Send token as cookie or in response body
     res.cookie("accessToken", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      domain: "localhost",
+      secure: process.env.SECURE,
+      sameSite: process.env.SAMESITE,
+      // domain : "localhost",
       path: "/",
     });
     res.cookie("refreshToken", refreshtoken, {
-      secure: false,
+      secure: process.env.SECURE,
       httpOnly: true,
-      sameSite: "strict",
-      domain: "localhost",
+      sameSite: process.env.SAMESITE,
+      // domain : "localhost",
       path: "/",
     });
     console.log(result[0]);
