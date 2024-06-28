@@ -33,7 +33,6 @@ This repository contains the backend code for the Student Result Management Syst
 - dotenv for environment variables
 - Multer for image validation
 - nodemailer for email service
-- 
 
 ## Installation
 
@@ -83,12 +82,12 @@ Follow these steps to set up the project locally:
 
     The server will be running on http://localhost:8080.
 
-Usage
+## Usage
 - The backend server will be running on http://localhost:8080.
 - The frontend application will interact with this backend to perform various operations like user authentication, result management, etc.
 
 
-**API Endpoints**
+## API Endpoints
 Here's a list of the main API endpoints:
 
 - Authentication:
@@ -111,7 +110,7 @@ Here's a list of the main API endpoints:
   - PUT /api/results/:id: Update a result
 
 
-**Project Structure**
+## Project Structure
 ```bash
   student-result-management-backend/
   ├── config/
@@ -151,10 +150,10 @@ Here's a list of the main API endpoints:
   └── ...
 ```
 
-**License**
+## License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-**Contact**
+## Contact
 For any questions or suggestions, please contact:
 
 Rohan Thapa - Email
