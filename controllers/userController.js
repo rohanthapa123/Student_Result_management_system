@@ -16,6 +16,7 @@ exports.register = async (req, res) => {
 
     return res.json({ message: "Done", insertId: result.insertId });
   } catch (error) {
+    // console.log(error);
     if (error.status && error.message) {
       res.status(error.status).json({ error: error.message });
     } else {
