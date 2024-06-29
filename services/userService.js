@@ -15,7 +15,15 @@ exports.registerUser = async (userData) => {
       // error.message = "Email already used";
       throw error;
     }
-
+    const [results2] = await userModel.getUserByPrimaryContact(userData.primary_contact);
+    // console.log(results);
+    if (results2.length > 0) {
+      const error = new Error("Primary contact can't be dublicate");
+      error.status = 400;
+      // error.message = "Email already used";
+      throw error;
+    }
+    
     const password = generatePassword();
     let hashedPassword = await bcrypt.hash(password, 8);
     // console.log(hashedPassword);
@@ -24,7 +32,8 @@ exports.registerUser = async (userData) => {
     const newUser = await userModel.createUser(user);
     console.log(password);
     try {
-      sendCredential(userData.email, password);
+      await sendCredential(userData.email, password);
+      console.log("Email send to user")
     } catch (error) {
       console.log("Error sending email");
       throw error;

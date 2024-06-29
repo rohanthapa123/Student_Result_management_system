@@ -242,6 +242,17 @@ class UserModel {
       console.log(error);
     }
   }
+  async getUserByPrimaryContact(primary_contact) {
+    try {
+      const [rows] = await pool.query(
+        "SELECT user.* FROM user where primary_contact = ?",
+        [primary_contact]
+      );
+      return [rows];
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async getUserById(id) {
     try {
       const [rows] = await pool.query(
